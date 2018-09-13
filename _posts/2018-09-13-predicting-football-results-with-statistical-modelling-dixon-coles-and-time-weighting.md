@@ -448,14 +448,11 @@ print('; '.join("{0}: {1:.5f}".format(model, prob) for model,prob in
     
 
 As you can see, the DC model reports a higher probability of a draw compared to the BP model. In fact, you can plot the difference in the match score probability matrices between the two models.
-
-
 <div style="text-align:center" markdown="1">
 
 ![]({{ base_path }}/images/bp_dc_diff.png)
 
 </div>
-
 In one way, this is a good plot. The correction was only intended to have an effect on 4 specific match results (0-0, 1-0, 0-1 and 1-1) and that's what has happened. On the other hand, that was alot of hard work to essentially tweak the existing model. And that's without even considering whether it was a beneficial adjustment. Without exploring that point any further, I'm going to discuss the second advancement introduced by the DC model.
 
 ## Dixon-Coles Time Decay Model
