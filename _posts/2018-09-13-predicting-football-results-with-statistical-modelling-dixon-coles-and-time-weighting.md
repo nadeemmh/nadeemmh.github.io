@@ -125,7 +125,7 @@ $$
 P\left( x \right) = \frac{e^{-\lambda} \lambda ^x }{x!}, \lambda>0
 $$
 
-In our case, $\lambda$ represents the team's average or expected goal scoring rate. The Poisson distribution is a decent approximation of a team's scoring frequency. All of the model's discussed here agree on this point; the disagreement centres on how to calculate $\lambda_{home}$ and $\lambda_{away}$.
+In our case, $$\lambda$$ represents the team's average or expected goal scoring rate. The Poisson distribution is a decent approximation of a team's scoring frequency. All of the model's discussed here agree on this point; the disagreement centres on how to calculate $$\lambda_{home}$$ and $$\lambda_{away}$$.
 
 
 <div style="text-align:center" markdown="1">
@@ -141,7 +141,7 @@ P\left(X_{i,j} = x, Y_{j,i} = y \right) = \frac{e^{-\lambda} \lambda^x }{x!} \fr
 \\ \text{where } \quad \lambda = \alpha_i \beta_j \gamma \quad \mu = \alpha_j \beta_i
 $$
 
-In this equation, $i$ and $j$ refer to the home and away teams, respectively; $\alpha$ and $\beta$ denote each team's attack and defensive strength, respectively, while $\gamma$ represents the home advantage factor. So, we need to calculate $\alpha$ and $\beta$ for each team, as well as $\gamma$ (the home field advantage term- it's the same value for every team). As this was explained in the [previous post](https://dashee87.github.io/football/python/predicting-football-results-with-statistical-modelling/), I'll just show the model output.
+In this equation, $$i$$ and $$j$$ refer to the home and away teams, respectively; $$\alpha$$ and $$\beta$$ denote each team's attack and defensive strength, respectively, while $$\gamma$$ represents the home advantage factor. So, we need to calculate $$\alpha$$ and $$\beta$$ for each team, as well as $$\gamma$$ (the home field advantage term- it's the same value for every team). As this was explained in the [previous post](https://dashee87.github.io/football/python/predicting-football-results-with-statistical-modelling/), I'll just show the model output.
 
 
 
@@ -273,7 +273,7 @@ P\left(X_{i,j} = x, Y_{j,i} = y \right) = \tau_{\lambda, \mu}(x) \frac{e^{-\lamb
   \end{cases}
 $$
 
-The key difference over the BP model is the addition of the $\tau$ (tau) function. It is highly dependent on the $\rho$ (rho) parameter, which controls the strength of the correction (note: setting $\rho$=0 equates to the standard BP model). We can easily convert $\tau_{\lambda, \mu}(x, y)$ to Python code.
+The key difference over the BP model is the addition of the $$\tau$$ (tau) function. It is highly dependent on the $$\rho$$ (rho) parameter, which controls the strength of the correction (note: setting $$\rho$$=0 equates to the standard BP model). We can easily convert $$\tau_{\lambda, \mu}(x, y)$$ to Python code.
 
 
 ```python
@@ -290,14 +290,14 @@ def rho_correction(x, y, lambda_x, mu_y, rho):
         return 1.0
 ```
 
-Unfortunately, you can't just update your match score matrix with this function; you need to recalculate the various coefficients that go into the model. And unfortunately again, you can't just implement an off the shelf generalised linear model, as we did before. We have to construct the likelihood function and find the coefficients that maximise it- a technique known as [Maximum Likelihood Estimation](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation). With matches indexed $k=1,\dots,N$ and corresponding scores ($x_k$, $y_k$), this is the likelihood function that we seek to maximise:
+Unfortunately, you can't just update your match score matrix with this function; you need to recalculate the various coefficients that go into the model. And unfortunately again, you can't just implement an off the shelf generalised linear model, as we did before. We have to construct the likelihood function and find the coefficients that maximise it- a technique known as [Maximum Likelihood Estimation](https://en.wikipedia.org/wiki/Maximum_likelihood_estimation). With matches indexed $$k=1,\dots,N$$ and corresponding scores ($$x_k$$, $$y_k$$), this is the likelihood function that we seek to maximise:
 
 $$
 L(\alpha_i, \beta_i, \rho, \gamma, i=1,\dots,n) = \prod_{k=1}^{N} \tau_{\lambda_k,\mu_k}(x_k, y_k) \ \frac{e^{-\lambda} \lambda^{x_k} }{x_k!} \frac{e^{-\mu} \mu^{y_k} }{y_k!}
 \\ \text{where } \quad \lambda_k = \alpha_{i(k)} \beta_{j(k)} \gamma \quad \mu_k = \alpha_{j(k)} \beta_{i(k)}
 $$
 
-In this equation, $i(k)$ and $j(k)$ respectively denote the indices of the home and away teams in match $k$. For a few [different reasons](https://www.quora.com/Why-is-log-likelihood-so-widely-used-in-Machine-Learning) (numerical precision, practicality, etc.), we'll actually maximise the log-likelihood function. As the logarithm is a strictly increasing function (i.e. $\log(b) > \log(a) \ \forall \ b > a$), both likelihood functions are maximised at the same point. Also, recall that $\log(a \ b) = \log(a) + \log(b)$. We can thus write the log-likelihood function in Python code.
+In this equation, $$i(k)$$ and $$j(k)$$ respectively denote the indices of the home and away teams in match $$k$$. For a few [different reasons](https://www.quora.com/Why-is-log-likelihood-so-widely-used-in-Machine-Learning) (numerical precision, practicality, etc.), we'll actually maximise the log-likelihood function. As the logarithm is a strictly increasing function (i.e. $$\log(b) > \log(a) \ \forall \ b > a$$), both likelihood functions are maximised at the same point. Also, recall that $$\log(a \ b) = \log(a) + \log(b)$$. We can thus write the log-likelihood function in Python code.
 
 
 ```python
@@ -307,11 +307,11 @@ def dc_log_like(x, y, alpha_x, beta_x, alpha_y, beta_y, rho, gamma):
             np.log(poisson.pmf(x, lambda_x)) + np.log(poisson.pmf(y, mu_y)))
 ```
 
-You may have noticed that `dc_log_like` included a transformation of $\lambda$ and $\mu$, where  $\lambda = \exp(\alpha_i + \beta_j + \gamma)$ and $\mu = \exp(\alpha_j + \beta_i)$, so that we're essentially trying to calculate expected log goals. This is equivalent to the log [link function](https://en.wikipedia.org/wiki/Generalized_linear_model) in the previous BP glm implementation. It shouldn't really affect model accuracy, it just means that convergence of the maximisation algorithm should be easier as $\lambda, \mu > 0 \ \forall \ \alpha, \beta, \gamma$. Non-positive lambdas are not compatible with a Poisson distribution, so this would return warnings and/or errors during implementation.
+You may have noticed that `dc_log_like` included a transformation of $$\lambda$$ and $$\mu$$, where  $$\lambda = \exp(\alpha_i + \beta_j + \gamma)$$ and $$\mu = \exp(\alpha_j + \beta_i)$$, so that we're essentially trying to calculate expected log goals. This is equivalent to the log [link function](https://en.wikipedia.org/wiki/Generalized_linear_model) in the previous BP glm implementation. It shouldn't really affect model accuracy, it just means that convergence of the maximisation algorithm should be easier as $$\lambda, \mu > 0 \ \forall \ \alpha, \beta, \gamma$$. Non-positive lambdas are not compatible with a Poisson distribution, so this would return warnings and/or errors during implementation.
 
 We're now ready to find the parameters that maximise the log likelihood function. Basically, you design a function that takes a set of model parameters as an argument. You set some initial values and potentially include some constraints and select the appropriate optimisation algorithm. I've opted for scipy's [minimise function](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html) (a possible alternative is [fmin](https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.fmin.html)- note: the functions  seek to minimise the negative log-likelihood). It employs a process analogous to gradient descent, so that the algorithm iteratively converges to the optimal parameter set. The computation can be quite slow as it's forced to approximate the derivatives. If you're not as lazy as me, you could potentially speed it up by [manually constructing the partial derivatives](https://projekter.aau.dk/projekter/files/14466581/AssessingTheNumberOfGoalsInSoccerMatches.pdf#page=61). 
 
-In line with the original [Dixon Coles paper](http://web.math.ku.dk/~rolf/teaching/thesis/DixonColes.pdf) and the [opisthokonta blog](https://opisthokonta.net/?p=890), I've added the constraint that $\frac{1}{n}\sum_{i} \alpha_{i}=1$ (i.e. the average attack strength value is 1). This step isn't strictly necessary, but it means that it should return a unique solution (otherwise, the model would suffer from overparamterisation and each execution would return different coefficients).
+In line with the original [Dixon Coles paper](http://web.math.ku.dk/~rolf/teaching/thesis/DixonColes.pdf) and the [opisthokonta blog](https://opisthokonta.net/?p=890), I've added the constraint that $$\frac{1}{n}\sum_{i} \alpha_{i}=1$$ (i.e. the average attack strength value is 1). This step isn't strictly necessary, but it means that it should return a unique solution (otherwise, the model would suffer from overparamterisation and each execution would return different coefficients).
 
 Okay, we're ready to find the coefficients that maximise the log-likelihood function for the 2017/18 EPL season.
 
@@ -478,7 +478,7 @@ $$
 L(\alpha_i, \beta_i, \rho, \gamma, i=1,\dots,n) = \prod_{k \in A_t}\{\tau_{\lambda_k,\mu_k}(x_k, y_k) \frac{e^{-\lambda} \lambda^{x_k} }{x_k!} \frac{e^{-\mu} \mu^{y_k} }{y_k!}\}^{\phi(t-t_k)}
 $$
 
-where $t_k$ represents the time that match $k$ was played,  $A_t = \{k: t_k < t\}$ (i.e. set of matches played before time $t$), $\alpha$, $\beta$, $\gamma$ and $\tau$ are defined as before. $\phi$ represents the non-increasing weighting function. Copying the original Dixon Coles paper, we'll set $\phi(t)$ to be a negative exponential with rate $\xi$ (called xi). As before, we need to determine the parameters that maximise this likelihood function. We can't just feed this equation into a minimisation algorithm for various reasons (e.g. we can trivially maximise this function by increasing $\xi$). Instead, we'll fix $\xi$ and determine the remaining parameters the same way as before. We can thus write the corresponding log-likelihood function in the following Python code (recall $\log(a^b) = \log(a) \log(b)$).
+where $$t_{k}$$ represents the time that match $$k$$ was played,  $$A_t = \{k: t_k < t\}$$ (i.e. set of matches played before time $$t$$), $$\alpha$$, $$\beta$$, $$\gamma$$ and $$\tau$$ are defined as before. $$\phi$$ represents the non-increasing weighting function. Copying the original Dixon Coles paper, we'll set $$\phi(t)$$ to be a negative exponential with rate $$\xi$$ (called xi). As before, we need to determine the parameters that maximise this likelihood function. We can't just feed this equation into a minimisation algorithm for various reasons (e.g. we can trivially maximise this function by increasing $$\xi$$). Instead, we'll fix $$\xi$$ and determine the remaining parameters the same way as before. We can thus write the corresponding log-likelihood function in the following Python code (recall $$\log(a^b) = \log(a) \log(b)$$).
 
 
 ```python
@@ -488,21 +488,21 @@ def dc_log_like_decay(x, y, alpha_x, beta_x, alpha_y, beta_y, rho, gamma, t, xi=
                               np.log(poisson.pmf(x, lambda_x)) + np.log(poisson.pmf(y, mu_y)))
 ```
 
-To determine the optimal value of $\xi$, we'll select the model that makes the best predictions. Repeating the process in the Dixon-Coles paper, rather working on match score predictions, the models will be assessed on match result predictions. Essentially, the model that predicted the actual match results with the highest probability will be deemed the winner. An obvious flaw here is that only one match result is considered. For example, if the result was a home win, then the draw and away win probabilities are ignored. Alternative approaches could utilise [Ranked Probability Scores](http://opisthokonta.net/?p=1548) or betting probabilities. But we'll keep things simple and replicate the Dixon Coles paper. We can redefine the objective in mathematical terms; we wish to find $\xi$ that maximises $S(\xi)$:
+To determine the optimal value of $$\xi$$, we'll select the model that makes the best predictions. Repeating the process in the Dixon-Coles paper, rather working on match score predictions, the models will be assessed on match result predictions. Essentially, the model that predicted the actual match results with the highest probability will be deemed the winner. An obvious flaw here is that only one match result is considered. For example, if the result was a home win, then the draw and away win probabilities are ignored. Alternative approaches could utilise [Ranked Probability Scores](http://opisthokonta.net/?p=1548) or betting probabilities. But we'll keep things simple and replicate the Dixon Coles paper. We can redefine the objective in mathematical terms; we wish to find $$\xi$$ that maximises $$S(\xi)$$:
 
 $$
 S(\xi) = \sum^{N}_{k=1} (\delta^{H}_{k} \log p^{H}_{k} + \delta^{A}_{k} \log p^{A}_{k} + \delta^{D}_{k} \log p^{D}_{k})
 $$
 
-This looks more complicated than it really is. The $\delta$ terms just captures the match result e.g. $\delta^{H}_{k}$ = 1 if match $k$ ended in a home win, while the $p$ terms are simply the match result probabilities. For example, we can rewrite $p^{H}_{k}$ (probability of home win): 
+This looks more complicated than it really is. The $$\delta$$ terms just captures the match result e.g. $$\delta^{H}_{k}$$ = 1 if match $$k$$ ended in a home win, while the $$p$$ terms are simply the match result probabilities. For example, we can rewrite $$p^{H}_{k}$$ (probability of home win): 
 
 $$
 p^{H}_{k} = \sum_{l,m \in B_H} P(X_k = l, Y_k = m), \text{ where } B_H = \{(l,m): l>m\}
 $$ 
 
-Each of these $p$ terms translates to the matrix operations outlined previously. One part that will change is the log likelihood function. We need to incorporate the $\phi(t)$, which can be done with the following Python code (note how $\xi$=0 equates to the standard non-time weighted model).
+Each of these $$p$$ terms translates to the matrix operations outlined previously. One part that will change is the log likelihood function. We need to incorporate the $$\phi(t)$$, which can be done with the following Python code (note how $$\xi$$=0 equates to the standard non-time weighted model).
 
-To assess the predictive accuracy of the model, we'll utilise an approach analogous to the validation set in machine learning. Let's say we're trying to predict the fixtures occurring on the 13th January 2018. With $\xi$ fixed to a specific value, we use all of the previous results in that season to build a model. We determine how that model predicted the actual results of those matches with the above equations. We move onto the next set of fixtures (say 20th January) and build the model again- this time including the 13th January games- and assess how well it predicted the results of those matches. We repeat this process for the rest of the 2017/18 season. When we sum up all of these predictions, you have calculated what is called the predicted profile log-likelihood for that value of $\xi$. However, a new model must be built for each set of fixtures, so this can be quite slow. I have taken a few steps to speed up the computations:
+To assess the predictive accuracy of the model, we'll utilise an approach analogous to the validation set in machine learning. Let's say we're trying to predict the fixtures occurring on the 13th January 2018. With $$\xi$$ fixed to a specific value, we use all of the previous results in that season to build a model. We determine how that model predicted the actual results of those matches with the above equations. We move onto the next set of fixtures (say 20th January) and build the model again- this time including the 13th January games- and assess how well it predicted the results of those matches. We repeat this process for the rest of the 2017/18 season. When we sum up all of these predictions, you have calculated what is called the predicted profile log-likelihood for that value of $$\xi$$. However, a new model must be built for each set of fixtures, so this can be quite slow. I have taken a few steps to speed up the computations:
 
 1. Predicting the fixtures for the last 100 days of the 2017/18 EPL season. This is probably preferable anyway, as early season predictions would be quite unreliable.
 2. Forming match days consisting of three consecutive days (i.e. on Saturday we'll try to predict matches taking place on Saturday, Sunday and Monday). This should be okay, as teams tend not to play more than once in three days (except at Christmas, which isn't included in the validation period).
@@ -600,7 +600,7 @@ epl_1718.head()
 
 
 
-With this dataframe, we're now ready to compare different values of $\xi$. To speed up this process even further, I made the code parallelisable and ran it across my computer's multiple (4) cores (see Python file).
+With this dataframe, we're now ready to compare different values of $$\xi$$. To speed up this process even further, I made the code parallelisable and ran it across my computer's multiple (4) cores (see Python file).
 
 <div style="text-align:center" markdown="1">
 
@@ -609,7 +609,7 @@ With this dataframe, we're now ready to compare different values of $\xi$. To sp
 </div>
 
 
-It seems that $S(\xi)$ is minimised at $\xi$=0 (remember that $\xi \geq 0$), which is simply the standard non-weighted DC model. I suppose this makes sense: If you only have data for the season in question, then you don't have the luxury of down-weighting older results. In the Dixon-Coles paper, they actually compiled data from 4 consecutive seasons (1992/93 to 95/96). You'd expect time weighting to become more effective as the timeframe of your data expands. In other words, the first game of the same season might well be valuable, but the first game of the season five years ago is presumably less valuable. To investigate this hypothesis, we'll pull data for the previous 5 completed EPL seasons (i.e. 2013/14 to 17/18).
+It seems that $$S(\xi)$$ is minimised at $$\xi$$=0 (remember that $$\xi \geq 0$$), which is simply the standard non-weighted DC model. I suppose this makes sense: If you only have data for the season in question, then you don't have the luxury of down-weighting older results. In the Dixon-Coles paper, they actually compiled data from 4 consecutive seasons (1992/93 to 95/96). You'd expect time weighting to become more effective as the timeframe of your data expands. In other words, the first game of the same season might well be valuable, but the first game of the season five years ago is presumably less valuable. To investigate this hypothesis, we'll pull data for the previous 5 completed EPL seasons (i.e. 2013/14 to 17/18).
 
 
 <div>
@@ -690,7 +690,7 @@ It seems that $S(\xi)$ is minimised at $\xi$=0 (remember that $\xi \geq 0$), whi
 
 
 
-Same procedure as before, with varying values of $\xi$, we'll quanitfy how well the model predicted the match results of the second half of the 17/18 EPL season. Again, I ran the program across multiple cores (see Python file).
+Same procedure as before, with varying values of $$\xi$$, we'll quanitfy how well the model predicted the match results of the second half of the 17/18 EPL season. Again, I ran the program across multiple cores (see Python file).
 
 
 <div style="text-align:center" markdown="1">
@@ -700,11 +700,11 @@ Same procedure as before, with varying values of $\xi$, we'll quanitfy how well 
 </div>
 
 
-Now we have a curve resembles the same function in the Dixon Coles paper. Initially, the model becomes more accurate as you apply a time decay to the historical results. However, at a certain point ($\xi \approx$ 0.00325), the weighting becomes too harsh and worsens the performance of the model.
+Now we have a curve resembles the same function in the Dixon Coles paper. Initially, the model becomes more accurate as you apply a time decay to the historical results. However, at a certain point ($$\xi \approx$$ 0.00325), the weighting becomes too harsh and worsens the performance of the model.
 
-The Dixon Coles paper arrived at an optimal $\xi$=0.0065. However, as they employed half-weeks as their unit of time, we need to divide this value by 3.5. As such, the optimal value here ($\xi$ = 0.00325) is somewhat higher (note: the [opisthokonta blog](http://opisthokonta.net/?p=1013) returned a value of 0.0018, in agreement with the Dixon Coles paper). In this post, I utilised significantly fewer predictions, so it's possible that a more comparable approach would return a lower $\xi$.
+The Dixon Coles paper arrived at an optimal $$\xi$$=0.0065. However, as they employed half-weeks as their unit of time, we need to divide this value by 3.5. As such, the optimal value here ($$\xi$$ = 0.00325) is somewhat higher (note: the [opisthokonta blog](http://opisthokonta.net/?p=1013) returned a value of 0.0018, in agreement with the Dixon Coles paper). In this post, I utilised significantly fewer predictions, so it's possible that a more comparable approach would return a lower $$\xi$$.
 
-Another interesting feature of the 5 season graph is that the maximum value of $S(\xi)$ is -125.15. The maximum value of the 1 season $S(\xi)$ is -125.38 (attained at $\xi$=0). It's interesting that a data heavy appropriately time-weighted model returned a slightly better level of accuracy than the non-weighted model only using data from that season. That said, the approach outlined here was highly specific (predictions made on one particular season), so I would need to perform more analysis before I would draw any definitive conclusions from this result. Also, as shown in the [first post](https://dashee87.github.io/football/python/predicting-football-results-with-statistical-modelling/), making predictions towards the end of the season is notoriously difficult, which could also undermine any generalisation of these findings.
+Another interesting feature of the 5 season graph is that the maximum value of $$S(\xi)$$ is -125.15. The maximum value of the 1 season $$S(\xi)$$ is -125.38 (attained at $$\xi$$=0). It's interesting that a data heavy appropriately time-weighted model returned a slightly better level of accuracy than the non-weighted model only using data from that season. That said, the approach outlined here was highly specific (predictions made on one particular season), so I would need to perform more analysis before I would draw any definitive conclusions from this result. Also, as shown in the [first post](https://dashee87.github.io/football/python/predicting-football-results-with-statistical-modelling/), making predictions towards the end of the season is notoriously difficult, which could also undermine any generalisation of these findings.
 
 ## Conclusions
 
