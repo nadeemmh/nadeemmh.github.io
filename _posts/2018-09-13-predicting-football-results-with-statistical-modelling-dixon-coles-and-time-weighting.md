@@ -27,7 +27,7 @@ In an [earlier post](https://dashee87.github.io/football/python/predicting-footb
 
 The changes are motivated by a combination of intuition and statistics. The [Dixon-Coles](http://web.math.ku.dk/~rolf/teaching/thesis/DixonColes.pdf) model (named after the paper's authors) corrects for the basic model's underestimation of draws and it also incorporates a time component so that recent matches are considered more important in calculating average goals rate. This isn't a particularly novel idea for a blog post. There are numerous implementation of the Dixon-Coles model out there. Like any somewhat niche statistical modelling exercise, however, they are mostly available in R. I strongly recommend the excellent [opisthokonta blog](http://opisthokonta.net/?cat=48), especially if you're interested in more advanced models. If you're not interested in the theory and just want to start making predictions with R, then check out the [regista](https://github.com/Torvaney/regista) package on GitHub.
 
-As always, the corresponding [Jupyter notebook can be downloaded](2018-09-13-predicting-football-results-with-statistical-modelling-dixon-coles-and-time-weighting.ipynb) from [my GitHub](https://github.com/dashee87). I've also uploaded some Python files, if you want to bypass the highly engaging commentary.
+As always, the corresponding [Jupyter notebook can be downloaded](https://github.com/dashee87/blogScripts/blob/master/Jupyter/2018-09-13-predicting-football-results-with-statistical-modelling-dixon-coles-and-time-weighting.ipynb) from [my GitHub](https://github.com/dashee87). I've also uploaded some [Python files](https://github.com/dashee87/blogScripts/tree/master/Python/2018-09-13-dixon-coles-and-time-weighting), if you'd prefer to skip the highly engaging commentary.
 
 ## Data
 
@@ -119,7 +119,7 @@ epl_1718.head()
 
 ## Basic Poisson Model
 
-I won't spend too long on this model, as it was the subject of the original post. Essentially, you treat the number of goals scored by each team as two independent Poisson distributions (henceforth called the Basic Poisson (BP) model). The shape of each distribution is determined by the average number of goals scored by that team. A little reminder on the mathematical definition of the Poisson distribution:
+I won't spend too long on this model, as it was the subject of the [previous post](https://dashee87.github.io/football/python/predicting-football-results-with-statistical-modelling/). Essentially, you treat the number of goals scored by each team as two independent Poisson distributions (henceforth called the Basic Poisson (BP) model). The shape of each distribution is determined by the average number of goals scored by that team. A little reminder on the mathematical definition of the Poisson distribution:
 
 $$
 P\left( x \right) = \frac{e^{-\lambda} \lambda ^x }{x!}, \lambda>0
@@ -314,7 +314,7 @@ We're now ready to find the parameters that maximise the log likelihood function
 
 In line with the original [Dixon Coles paper](http://web.math.ku.dk/~rolf/teaching/thesis/DixonColes.pdf) and the [opisthokonta blog](https://opisthokonta.net/?p=890), I've added the constraint that $$\frac{1}{n}\sum_{i} \alpha_{i}=1$$ (i.e. the average attack strength value is 1). This step isn't strictly necessary, but it means that it should return a unique solution (otherwise, the model would suffer from overparamterisation and each execution would return different coefficients).
 
-Okay, we're ready to find the coefficients that maximise the log-likelihood function for the 2017/18 EPL season. The code can be found in the [Jupyter notebook](2018-09-13-predicting-football-results-with-statistical-modelling-dixon-coles-and-time-weighting.ipynb). I'll just display the model parameters.
+Okay, we're ready to find the coefficients that maximise the log-likelihood function for the 2017/18 EPL season. The code can be found in the [Jupyter notebook](https://github.com/dashee87/blogScripts/blob/master/Jupyter/2018-09-13-predicting-football-results-with-statistical-modelling-dixon-coles-and-time-weighting.ipynb). I'll just display the model parameters.
 
 
 
@@ -422,7 +422,7 @@ $$
 L(\alpha_i, \beta_i, \rho, \gamma, i=1,\dots,n) = \prod_{k \in A_t}\{\tau_{\lambda_k,\mu_k}(x_k, y_k) \frac{e^{-\lambda} \lambda^{x_k} }{x_k!} \frac{e^{-\mu} \mu^{y_k} }{y_k!}\}^{\phi(t-t_k)}
 $$
 
-where $$t_{k}$$ represents the time that match $$k$$ was played,  $$A_t = \{k: t_k < t\}$$ (i.e. set of matches played before time $$t$$), $$\alpha$$, $$\beta$$, $$\gamma$$ and $$\tau$$ are defined as before. $$\phi$$ represents the non-increasing weighting function. Copying the original Dixon Coles paper, we'll set $$\phi(t)$$ to be a negative exponential with rate $$\xi$$ (called xi). As before, we need to determine the parameters that maximise this likelihood function. We can't just feed this equation into a minimisation algorithm for various reasons (e.g. we can trivially maximise this function by increasing $$\xi$$). Instead, we'll fix $$\xi$$ and determine the remaining parameters the same way as before. We can thus write the corresponding log-likelihood function in the following Python code (recall $$\log(a^b) = \log(a) \log(b)$$).
+where $$t_{k}$$ represents the time that match $$k$$ was played,  $$A_t = \{k: t_k < t\}$$ (i.e. set of matches played before time $$t$$), $$\alpha$$, $$\beta$$, $$\gamma$$ and $$\tau$$ are defined as before. $$\phi$$ represents the non-increasing weighting function. Copying the original Dixon Coles paper, we'll set $$\phi(t)$$ to be a negative exponential with rate $$\xi$$ (called xi). As before, we need to determine the parameters that maximise this likelihood function. We can't just feed this equation into a minimisation algorithm for various reasons (e.g. we can trivially maximise this function by increasing $$\xi$$). Instead, we'll fix $$\xi$$ and determine the remaining parameters the same way as before. We can thus write the corresponding log-likelihood function in the following Python code (recall $$\log(a^b) = \log(a) \log(b)$$). Note how $\xi$=0 equates to the standard non-time weighted log-likelihood function.
 
 
 ```python
@@ -444,9 +444,9 @@ $$
 p^{H}_{k} = \sum_{l,m \in B_H} P(X_k = l, Y_k = m), \text{ where } B_H = \{(l,m): l>m\}
 $$ 
 
-Each of these $$p$$ terms translates to the matrix operations outlined previously. One part that will change is the log likelihood function. We need to incorporate the $$\phi(t)$$, which can be done with the following Python code (note how $$\xi$$=0 equates to the standard non-time weighted model).
+Each of these $$p$$ terms translates to the matrix operations outlined previously. To assess the predictive accuracy of the model, we'll utilise an approach analogous to the validation set in machine learning. Let's say we're trying to predict the fixtures occurring on the 13th January 2018. With $$\xi$$ fixed to a specific value, we use all of the previous results in that season to build a model. We determine how that model predicted the actual results of those matches with the above equations. We move onto the next set of fixtures (say 20th January) and build the model again- this time including the 13th January games- and assess how well it predicted the results of those matches. We repeat this process for the rest of the 2017/18 season. When we sum up all of these predictions, you have calculated what is called the predicted profile log-likelihood for that value of $$\xi$$. 
 
-To assess the predictive accuracy of the model, we'll utilise an approach analogous to the validation set in machine learning. Let's say we're trying to predict the fixtures occurring on the 13th January 2018. With $$\xi$$ fixed to a specific value, we use all of the previous results in that season to build a model. We determine how that model predicted the actual results of those matches with the above equations. We move onto the next set of fixtures (say 20th January) and build the model again- this time including the 13th January games- and assess how well it predicted the results of those matches. We repeat this process for the rest of the 2017/18 season. When we sum up all of these predictions, you have calculated what is called the predicted profile log-likelihood for that value of $$\xi$$. However, a new model must be built for each set of fixtures, so this can be quite slow. I have taken a few steps to speed up the computations:
+However, a new model must be built for each set of fixtures, so this can be quite slow. I have taken a few steps to speed up the computations:
 
 1. Predicting the fixtures for the last 100 days of the 2017/18 EPL season. This is probably preferable anyway, as early season predictions would be quite unreliable.
 2. Forming match days consisting of three consecutive days (i.e. on Saturday we'll try to predict matches taking place on Saturday, Sunday and Monday). This should be okay, as teams tend not to play more than once in three days (except at Christmas, which isn't included in the validation period).
@@ -544,7 +544,7 @@ epl_1718.head()
 
 
 
-With this dataframe, we're now ready to compare different values of $$\xi$$. To speed up this process even further, I made the code parallelisable and ran it across my computer's multiple (4) cores (see Python file).
+With this dataframe, we're now ready to compare different values of $$\xi$$. To speed up this process even further, I made the code parallelisable and ran it across my computer's multiple (4) cores (see [Python file](https://github.com/dashee87/blogScripts/blob/master/Python/2018-09-13-dixon-coles-and-time-weighting/dixon_coles_decay_xi_1season.py)).
 
 <div style="text-align:center" markdown="1">
 
@@ -634,7 +634,7 @@ It seems that $$S(\xi)$$ is minimised at $$\xi$$=0 (remember that $$\xi \geq 0$$
 
 
 
-Same procedure as before, with varying values of $$\xi$$, we'll quanitfy how well the model predicted the match results of the second half of the 17/18 EPL season. Again, I ran the program across multiple cores (see Python file).
+Same procedure as before, with varying values of $$\xi$$, we'll quanitfy how well the model predicted the match results of the second half of the 17/18 EPL season. Again, I ran the program across multiple cores (see [Python file](https://github.com/dashee87/blogScripts/blob/master/Python/2018-09-13-dixon-coles-and-time-weighting/dixon_coles_decay_xi_5season.py)).
 
 
 <div style="text-align:center" markdown="1">
@@ -656,4 +656,4 @@ We started out by exploring ([once again](https://dashee87.github.io/football/py
 
 While I've described the different models in some detail, I haven't yet discussed whether these models will make you any money. They won't.
 
-You can start building your own models with the [Jupyter notebook](2018-09-13-predicting-football-results-with-statistical-modelling-dixon-coles-and-time-weighting.ipynb) and Python files available from [my GitHub account](https://github.com/dashee87). Thanks for reading!
+You can start building your own models with the [Jupyter notebook](https://github.com/dashee87/blogScripts/blob/master/Jupyter/2018-09-13-predicting-football-results-with-statistical-modelling-dixon-coles-and-time-weighting.ipynb) and [Python files](https://github.com/dashee87/blogScripts/tree/master/Python/2018-09-13-dixon-coles-and-time-weighting) available from [my GitHub account](https://github.com/dashee87). Thanks for reading!
