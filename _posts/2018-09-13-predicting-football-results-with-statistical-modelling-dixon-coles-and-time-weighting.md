@@ -136,6 +136,7 @@ In our case, $$\lambda$$ represents the team's average or expected goal scoring 
 
 
 We can formulate the model in mathematical terms:
+
 $$
 P\left(X_{i,j} = x, Y_{j,i} = y \right) = \frac{e^{-\lambda} \lambda^x }{x!} \frac{e^{-\mu} \mu^y }{y!}
 \\ \text{where } \quad \lambda = \alpha_i \beta_j \gamma \quad \mu = \alpha_j \beta_i
@@ -313,67 +314,10 @@ We're now ready to find the parameters that maximise the log likelihood function
 
 In line with the original [Dixon Coles paper](http://web.math.ku.dk/~rolf/teaching/thesis/DixonColes.pdf) and the [opisthokonta blog](https://opisthokonta.net/?p=890), I've added the constraint that $$\frac{1}{n}\sum_{i} \alpha_{i}=1$$ (i.e. the average attack strength value is 1). This step isn't strictly necessary, but it means that it should return a unique solution (otherwise, the model would suffer from overparamterisation and each execution would return different coefficients).
 
-Okay, we're ready to find the coefficients that maximise the log-likelihood function for the 2017/18 EPL season.
+Okay, we're ready to find the coefficients that maximise the log-likelihood function for the 2017/18 EPL season. The code can be found in the [Jupyter notebook](2018-09-13-predicting-football-results-with-statistical-modelling-dixon-coles-and-time-weighting.ipynb). I'll just display the model parameters.
 
 
-```python
-def solve_parameters(dataset, debug = False, init_vals=None, options={'disp': True, 'maxiter':100},
-                     constraints = [{'type':'eq', 'fun': lambda x: sum(x[:20])-20}] , **kwargs):
-    teams = np.sort(dataset['HomeTeam'].unique())
-    # check for no weirdness in dataset
-    away_teams = np.sort(dataset['AwayTeam'].unique())
-    if not np.array_equal(teams, away_teams):
-        raise ValueError("Something's not right")
-    n_teams = len(teams)
-    if init_vals is None:
-        # random initialisation of model parameters
-        init_vals = np.concatenate((np.random.uniform(0,1,(n_teams)), # attack strength
-                                      np.random.uniform(0,-1,(n_teams)), # defence strength
-                                      np.array([0, 1.0]) # rho (score correction), gamma (home advantage)
-                                     ))
-    def dc_log_like(x, y, alpha_x, beta_x, alpha_y, beta_y, rho, gamma):
-        lambda_x, mu_y = np.exp(alpha_x + beta_y + gamma), np.exp(alpha_y + beta_x) 
-        return (np.log(rho_correction(x, y, lambda_x, mu_y, rho)) + 
-                np.log(poisson.pmf(x, lambda_x)) + np.log(poisson.pmf(y, mu_y)))
 
-    def estimate_paramters(params):
-        score_coefs = dict(zip(teams, params[:n_teams]))
-        defend_coefs = dict(zip(teams, params[n_teams:(2*n_teams)]))
-        rho, gamma = params[-2:]
-        log_like = [dc_log_like(row.HomeGoals, row.AwayGoals, score_coefs[row.HomeTeam], defend_coefs[row.HomeTeam],
-                     score_coefs[row.AwayTeam], defend_coefs[row.AwayTeam], rho, gamma) for row in dataset.itertuples()]
-        return -sum(log_like)
-    opt_output = minimize(estimate_paramters, init_vals, options=options, constraints = constraints, **kwargs)
-    if debug:
-        # sort of hacky way to investigate the output of the optimisation process
-        return opt_output
-    else:
-        return dict(zip(["attack_"+team for team in teams] + 
-                        ["defence_"+team for team in teams] +
-                        ['rho', 'home_adv'],
-                        opt_output.x)) 
-```
-
-
-```python
-params = solve_parameters(epl_1718)
-```
-
-    C:\Program Files\Anaconda3\lib\site-packages\ipykernel\__main__.py:4: RuntimeWarning: divide by zero encountered in log
-    C:\Program Files\Anaconda3\lib\site-packages\ipykernel\__main__.py:4: RuntimeWarning: invalid value encountered in log
-    
-
-    Optimization terminated successfully.    (Exit mode 0)
-                Current function value: 1050.8007481056623
-                Iterations: 40
-                Function evaluations: 1825
-                Gradient evaluations: 40
-    
-
-
-```python
-params
-```
 
 
 
@@ -423,20 +367,20 @@ params
 
 
 
-The optimal `rho` value (-0.1285) returned by the model fits quite nicely with the value (-0.13) given in the equivalent [opisthokonta blog post](https://opisthokonta.net/?p=890). We can now start making some predictions by constructing match score matrices based on these model parameters.
+The optimal `rho` value (-0.1285) returned by the model fits quite nicely with the value (-0.13) given in the equivalent [opisthokonta blog post](https://opisthokonta.net/?p=890). We can now start making some predictions by constructing match score matrices based on these model parameters. This part is quite similar to BP model, except for the correction applied to the 0-0, 1-0, 0-1 and 1-1 matrix elements.
 
 
 ```python
-# [Simple Poisson, Dixon-Coles]
-print("Arsenal Win")
-print('; '.join("{0}: {1:.5f}".format(model, prob) for model,prob in 
-          zip(["Simple Poisson", "Dixon-Coles"], list(map(lambda x:np.sum(np.tril(x, -1)), [ars_sou, ars_sou_dc])))))
-print("Southampton Win")
-print('; '.join("{0}: {1:.5f}".format(model, prob) for model,prob in 
-          zip(["Simple Poisson", "Dixon-Coles"], list(map(lambda x:np.sum(np.triu(x, 1)), [ars_sou, ars_sou_dc])))))
-print("Draw")
-print('; '.join("{0}: {1:.5f}".format(model, prob) for model,prob in 
-          zip(["Simple Poisson", "Dixon-Coles"], list(map(lambda x:np.sum(np.diag(x)), [ars_sou, ars_sou_dc])))))
+def dixon_coles_simulate_match(params_dict, homeTeam, awayTeam, max_goals=10):
+    team_avgs = [np.exp(params_dict['attack_'+homeTeam] + params_dict['defence_'+awayTeam] + params_dict['home_adv']),
+                 np.exp(params_dict['defence_'+homeTeam] + params_dict['attack_'+awayTeam])]
+    team_pred = [[poisson.pmf(i, team_avg) for i in range(0, max_goals+1)] for team_avg in team_avgs]
+    output_matrix = np.outer(np.array(team_pred[0]), np.array(team_pred[1]))
+    correction_matrix = np.array([[rho_correction(home_goals, away_goals, team_avgs[0],
+                                                   team_avgs[1], params['rho']) for away_goals in range(2)]
+                                   for home_goals in range(2)])
+    output_matrix[:2,:2] = output_matrix[:2,:2] * correction_matrix
+    return output_matrix
 ```
 
     Arsenal Win
@@ -448,11 +392,14 @@ print('; '.join("{0}: {1:.5f}".format(model, prob) for model,prob in
     
 
 As you can see, the DC model reports a higher probability of a draw compared to the BP model. In fact, you can plot the difference in the match score probability matrices between the two models.
+
+
 <div style="text-align:center" markdown="1">
 
 ![]({{ base_path }}/images/bp_dc_diff.png)
 
 </div>
+
 In one way, this is a good plot. The correction was only intended to have an effect on 4 specific match results (0-0, 1-0, 0-1 and 1-1) and that's what has happened. On the other hand, that was alot of hard work to essentially tweak the existing model. And that's without even considering whether it was a beneficial adjustment. Without exploring that point any further, I'm going to discuss the second advancement introduced by the DC model.
 
 ## Dixon-Coles Time Decay Model
