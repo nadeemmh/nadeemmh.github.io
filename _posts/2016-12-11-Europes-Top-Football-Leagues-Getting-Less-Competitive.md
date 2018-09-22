@@ -19,8 +19,6 @@ tags:
   - R
 author: "David Sheehan"
 date: "12 December 2016"
-redirect_from:
-  - /data%20science/just-testing
 encoding: UTF-8
 ---
 
