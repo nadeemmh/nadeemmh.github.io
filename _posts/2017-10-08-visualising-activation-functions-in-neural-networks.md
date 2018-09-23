@@ -3,14 +3,13 @@ title: "Visualising Activation Functions in Neural Networks"
 excerpt: "Using D3, this post visually explores activation functions, a fundamental component of neural networks."
 layout: single
 categories:
-- data science
 - deep learning
 tags:
 - machine learning
 - deep learning
 - activation function
 author: "David Sheehan"
-redirect_from: /data%20science/deep%20learning/testing-something-here/
+redirect_from: /data%20science/deep%20learning/visualising-activation-functions-in-neural-networks/
 date: "08 October 2017"
 ---
 
