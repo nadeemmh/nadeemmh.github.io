@@ -10,7 +10,7 @@ tags:
 - deep learning
 - activation function
 author: "David Sheehan"
-redirect_from: /data%20science/deep%20learning/visualising-activation-functions-in-neural-network
+redirect_from: /data%20science/deep%20learning/testing-something-here/
 date: "08 October 2017"
 ---
 
