@@ -13,7 +13,8 @@ author: "David Sheehan"
 redirect_from: /data%20science/deep%20learning/visualising-activation-functions-in-neural-network
 date: "08 October 2017"
 ---
-  
+
+{% include base_path %}
 
 In neural networks, activation functions determine the output of a node
 from a given set of inputs, where non-linear activation functions allow
