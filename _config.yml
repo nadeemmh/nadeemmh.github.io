@@ -9,7 +9,7 @@
 locale                   : "en"
 title                    : "nadeemmh.github.io"
 title_separator          : "-"
-name                     : "Hamza Nadeem
+name                     : "Hamza Nadeem"
 description              : "My personal blog to explore the world of data science and machine learning."
 url                      : "https://nadeemmh.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
