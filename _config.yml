@@ -77,11 +77,11 @@ analytics:
 
 # Site Author
 author:
-  name             : "David Sheehan"
-  avatar           : "bio-photo.jpg"
-  bio              : "Data scientist interested in sports, politics and Simpsons references"
-  location         : "London via Cork"
-  email            : "davidfsheehan87@gmail.com"
+  name             : "Hamza Nadeem"
+  avatar           : "me.jpg"
+  bio              : "Mathematician with a focus in Data Science and Machine Learning."
+  location         : "United Kingdom"
+  email            : "hamzanadeem0714@gmail.com"
   uri              :
   bitbucket        :
   codepen          :
@@ -89,7 +89,7 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : dashee87
+  github           : nadeemmh
   google_plus      :
   keybase          :
   instagram        :
