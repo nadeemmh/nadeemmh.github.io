@@ -2,14 +2,15 @@
 title: "Machine Learning Explained "
 categories:
   - data science
+  - machine learning
 tags:
   - data
   - scientist
   - science
   - analyst
-  - R
-  - salary
-  - jobbR
+  - python
+  - machine
+  - learning
 ---
 
 There are two main types of learning:
