@@ -7,20 +7,20 @@
 
 # Site Settings
 locale                   : "en"
-title                    : "dashee87.github.io"
+title                    : "nadeemmh.github.io"
 title_separator          : "-"
-name                     : "David Sheehan"
-description              : "My personal blog to explore the world of data science."
-url                      : "https://dashee87.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+name                     : "Hamza Nadeem"
+description              : "My personal blog to explore the world of data science and machine learning."
+url                      : "https://nadeemmh.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : # the subpath of your site, e.g. "/blog"
-repository               : "dashee87/dashee87.github.io" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
+repository               : "nadeemmh/nadeemmh.github.io" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
 comments:
   provider               : disqus # false (default), "disqus", "discourse", "facebook", "google-plus", "staticman", "custom"
   disqus:
-    shortname            : dashee87 # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
+    shortname            : nadeemmh # https://help.disqus.com/customer/portal/articles/466208-what-s-a-shortname-
   discourse:
     server               : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
   facebook:
@@ -77,11 +77,11 @@ analytics:
 
 # Site Author
 author:
-  name             : "David Sheehan"
+  name             : "Hamza Nadeem"
   avatar           : "bio-photo.jpg"
-  bio              : "Data scientist interested in sports, politics and Simpsons references"
-  location         : "London via Cork"
-  email            : "davidfsheehan87@gmail.com"
+  bio              : "Mathematician with a focus in Data Science and Machine Learning."
+  location         : "United Kingdom"
+  email            : "admin@hxmza.me"
   uri              :
   bitbucket        :
   codepen          :
@@ -89,12 +89,12 @@ author:
   flickr           :
   facebook         :
   foursquare       :
-  github           : dashee87
+  github           : nadeemmh
   google_plus      :
   keybase          :
   instagram        :
   lastfm           :
-  linkedin         :
+  linkedin         : "https://www.linkedin.com/in/mhamzan98/"
   pinterest        :
   soundcloud       :
   stackoverflow    : # "123456/username" (the last part of your profile url, e.g. http://stackoverflow.com/users/123456/username)
