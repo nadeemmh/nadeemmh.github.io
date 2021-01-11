@@ -2,6 +2,7 @@
 layout: archive
 permalink: /blog/
 title: "All Posts"
+author: "Hamza Nadeem"
 author_profile: true
 ---
 
