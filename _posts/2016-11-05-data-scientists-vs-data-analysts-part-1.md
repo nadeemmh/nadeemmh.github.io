@@ -15,9 +15,9 @@ tags:
 
 ## There are two main types of learning:
 
-1) Supervised Learning
+## 1) Supervised Learning
 
-2) Unsupervised Learning
+## 2) Unsupervised Learning
 
 
 ## 1) Supervised Learning 
