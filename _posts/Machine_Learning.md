@@ -1,5 +1,5 @@
 ---
-title: "Data Scientists vs Data Analysts- Part 1"
+title: "Data Scientists vs Data Analysts- Part 2"
 categories:
   - data science
 tags:
