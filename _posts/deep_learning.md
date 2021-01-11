@@ -1,4 +1,6 @@
-## Deep Learning: Neural Networks
+## Deep Learning Explained: Neural Networks
+
+Deep learning is an unsupervised machine learning method that imitates the workings of the human brain in processing data and creating patterns for use in decision making. While machine learning uses simpler concepts, deep learning works with artificial neural networks, which are designed to imitate how humans think and learn. This post explains how a neural networks are used to make predictions using unlabeled data.
 
 ### Definitions: 
 - Neuron/Unit: A mathematical function that models the functioning of a biological neuron (human brain). A neuron computes the weighted average of its input, and this sum is passed through a function. The output of the neuron can then be sent as input to the neurons of another layer, which could repeat the same computation.
