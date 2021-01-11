@@ -1,11 +1,14 @@
 ---
 layout: single
 title: "About"
-author: "David Sheehan"
-date: "4 November 2016"
+author: "Hamza Nadeem"
 permalink: /about/
 author_profile: true
 
 ---
 
-I studied maths at [University College Cork (UCC)](https://en.wikipedia.org/wiki/University_College_Cork). It's true that its first Maths professor was [George Boole](https://en.wikipedia.org/wiki/George_Boole). After UCC, I earned a PhD in neuroscience from [University College London (UCL)](https://en.wikipedia.org/wiki/University_College_London). Ah... all of Coldplay went to UCL. Mathematical biology was the cool thing back in 2009. But like any good doctor these days, I left actual science for the (relatively) sexy world of data science. My current interests involve mining twitter for the next mathematical fad.
+I have graduated from Aston University with a Bachelor of Science in Mathematics (Hons). I chose to do a sandwich year during which I was given the opportunity to go to Germany and study in the presitigious Technische Universität München (TUM) where I studied Mechanical Engineering for a year.
+
+During my final year of university, I worked as a Student Ambassador for my university course where I helped first year students during seminars. I was also fortunate enough to get a part-time job as a Data Analyst (Intern) at Fakir Halal Donner where I used Jupyter (Python) to analyse and visualize data and deliver solutions in the form of professional reports, according to the company's business model.
+
+With my knowledge, skills, and experience, I would like to pursue a career in Data Science and Machine Learning where I can continue to practice software such as MATLAB, Python, R, and learn new and innovative techniques. Ultimately, my goal is to undertake a post graduate research degree (preferably PhD), and become a Research Scientist for a company/institution where I can help make a change in the world for problems such as climate change, poverty, energy, and medicine.
