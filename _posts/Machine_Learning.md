@@ -20,6 +20,7 @@ There are two main types of learning:
 ## 1) Supervised Learning 
 
 What is Supervised Learning?
+
 In supervised learning, a predictive model is developed based on both input data and output data. Classification refers to a supervised learning predictive modeling problem where a class label is predicted for a sample of input data. 
 
 Example:
