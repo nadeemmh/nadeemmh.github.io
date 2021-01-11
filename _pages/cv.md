@@ -7,4 +7,4 @@ author_profile: true
 ---
 
 
-![CV](nadeemmh/nadeemmh.github.io/images/cv-1.png "Optional Title")
+![image info](./cv-1.png)
