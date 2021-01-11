@@ -13,7 +13,7 @@ tags:
   - learning
 ---
 
-# There are two main types of learning:
+## There are two main types of learning:
 
 ## 1) Supervised Learning 
 
