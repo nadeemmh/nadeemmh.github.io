@@ -103,6 +103,6 @@ The child has not seen this dog earlier. But it recognizes many features (2 ears
 
   Example: Groups of shopper based on their browsing and purchasing histories.
 
-## Comparson
+## Comparison
 
 ![labels](https://i.imgur.com/JAqrARe.png)
