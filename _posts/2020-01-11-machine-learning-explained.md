@@ -13,13 +13,14 @@ tags:
   - learning
 ---
 
+This post explores machine learning and the different methods that are used to develop predictive models. We will understand what each of these methods are, what they do, their pros and cons, and what is the best application for them. 
+
 ## There are two main types of learning:
 
 1) Supervised Learning
 
 2) Unsupervised Learning
 
-In this post we will learn what each of these types are, what they do, their pros and cons, and what is the best application for them. 
 
 ## 1) Supervised Learning 
 
