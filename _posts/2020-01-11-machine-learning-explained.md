@@ -14,7 +14,9 @@ tags:
 ---
 
 ## There are two main types of learning:
+
 1) Supervised Learning
+
 2) Unsupervised Learning
 
 In this post we will learn what each of these types are, what they do, their pros and cons, and what is the best application for them. 
