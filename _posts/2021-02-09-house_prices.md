@@ -356,57 +356,9 @@ X_train = df_Train.drop(['SalePrice'], axis = 1).values
 y_train = df_Train['SalePrice'].values
 ```
 
-
-## 5) Data Preprocessing
-Data preprocessing (or data mining) is used to transform the raw data and make it more usable and useful. Here, data is cleaned and missing values are restored or handled.
-
-``` r
-# create all the catergorical vairables that we did in previous steps for both train and test sets.
-# most of this is taken from previous code
-df_all['cabin_multiple'] = df_all.Cabin.apply(lambda x: 0 if pd.isna(x) else len(x.split(' ')))
-df_all['cabin_adv'] = df_all.Cabin.apply(lambda x: str(x)[0])
-df_all['numeric_ticket'] = df_all.Ticket.apply(lambda x: 1 if x.isnumeric() else 0)
-df_all['ticket_letters'] = df_all.Ticket.apply(lambda x: ''.join(x.split(' ')[:-1]).replace('.','').replace('/','').lower() if len(x.split(' ')[:-1]) > 0 else 0)
-df_all['name_title'] = df_all.Name.apply(lambda x: x.split(',')[1].split('.')[0].strip())
-
-# create nulls for continuous data
-df_all.Age = df_all.Age.fillna(df_train.Age.median()) # take median of age to fill because it is not normally distributed
-df_all.Fare = df_all.Fare.fillna(df_train.Fare.median()) # take median of fare to fill because it is not normally distributed
-```
-
-``` r
-# drop null values in 'embarked' rows. This only happens twice in the training and never in test.
-df_all.dropna(subset=['Embarked'], inplace = True)
-``` 
-
-``` r
-# log norm of fare 
-df_all['norm_fare'] = np.log(df_all.Fare+1)
-df_all['norm_fare'].hist()
-```
-> ![layers](https://i.imgur.com/qBd6nrv.png)
-
-``` r
-# converted fare to category for use
-df_all.Pclass = df_all.Pclass.astype(str)
-```
-
-``` r
-# created dummy variables from categories 
-df_dummies = pd.get_dummies(df_all[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'norm_fare', 'Embarked', 'cabin_adv', 'cabin_multiple', 'numeric_ticket', 'name_title', 'train_test']])
-```
-
-``` r
-# split to train test again
-X_train = df_dummies[df_all.train_test == 1].drop(['train_test'], axis = 1)
-X_test = df_dummies[df_all.train_test == 0].drop(['train_test'], axis = 1)
-
-y_train = df_all[df_all.train_test == 1].Survived
-```
-
 By doing this we have now created the train/test split which we can now use to build a model and generate predictions.
 
-## 7) Model Testing and Building
+## 4) Model Testing and Building
 Here we build the model and can experiment with different models with default parameters. We 
 
 ``` r
@@ -421,7 +373,7 @@ from xgboost import XGBRegressor
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import GridSearchCV
 ```
-We will try a few of the model using 5 fold cross validation to get a baseline model to see which model performs the best and delivers the most accurate results.
+We will test a few of the models using 5 fold cross validation to get a baseline model to see which one performs the best and delivers the most accurate results.
 
 ``` r
 # Decision Tree Regressor
@@ -431,7 +383,7 @@ print(cv)
 print(cv.mean())
 mean_dt = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/3QfSNY3.png)
+> ![layers](https://i.imgur.com/jLLdV3n.png)
 
 ``` r
 # Bayesian Ridge Regression
@@ -441,7 +393,7 @@ print(cv)
 print(cv.mean())
 mean_brr = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/fuic1MY.png)
+> ![layers](https://i.imgur.com/DPuIagr.png)
 
 ``` r
 # Ridge CV
@@ -451,7 +403,7 @@ print(cv)
 print(cv.mean())
 mean_rdg = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/rQuH7ge.png)
+> ![layers](https://i.imgur.com/QnoitCh.png)
 
 ``` r
 # Extreme Gradient Boosting
@@ -461,7 +413,7 @@ print(cv)
 print(cv.mean())
 mean_xgb = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/ev88Spp.png)
+> ![layers](https://i.imgur.com/7dkJ4Pz.png)
 
 ``` r
 # Lasso Regression
@@ -471,65 +423,66 @@ print(cv)
 print(cv.mean())
 mean_lso = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/5XQqo76.png)
+> ![layers](https://i.imgur.com/d3sIfQ8.png)
 
 
-> ![layers](https://i.imgur.com/eietcXE.png)
+> ![layers](https://i.imgur.com/UNuegrg.png)
 
-From the table above, it is clear that the Extreme Gradient Bossting model performed the best out of the group in the 5-fold cross validation test. We can now optimise this model to try and predict the data.
+The table above shows the average results (accuracy) for each model which gives us an idea of which model would be optimal for our case.
 
-## 8) Model Optimisation
-The "Voting Classifier" takes all of the inputs and averages the results. For a "hard" voting classifier each classifier gets 1 vote "yes" or "no" and the resutl is just a popular vote.
+## 5) Model Optimisation
+From the baseline models, it is clear that the Extreme Gradient Bossting model performed the best out of the group in the 5-fold cross validation test. We can now optimise this model to try and predict the data.
 
-A "soft" classifier averages the confidence of each of the models. If the average confidence is > 50% that it is a 1 it will be counted as such.
+### Attempt 1:
 
 ``` r 
-from sklearn.ensemble import VotingClassifier
+from sklearn.metrics import mean_squared_error
+from xgboost import XGBRegressor
+
+# Hyperparameters
+params = {
+    'objective': 'reg:squarederror', # MSE as loss function
+    'eval_metric': 'rmse', # RMSE as metric
+    'eta': 0.3, # Learning rate
+}
+
+# model
+model = XGBRegressor(**params)
+
+# Fit the model to the data
+model.fit(X_train, y_train)
+```
+> ![layers](https://i.imgur.com/6M3Wc5k.png)
+
+```r
+# Predictions
+y_test = model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
 
-``` r
-voting_cl = VotingClassifier(estimators = [('lr', lr), ('knn', knn), ('rf', rf), ('dt', dt), ('gnb', gnb), ('svc', svc)], voting = 'soft')
+### Attempt 2
 
-cv = cross_val_score(voting_cl, X_train_scaled, y_train, cv = 5)
-print(cv)
-print(cv.mean())
-```
-> ![layers](https://i.imgur.com/NMsJ9la.png)
 
-``` r
-voting_cl.fit(X_train_scaled, y_train)
-
-y_pred = voting_cl.predict(X_test_scaled).astype(int)
-
-y_pred = pd.Series(voting_cl.predict(X_test_scaled).astype(int))
-```
-
-## 9) Results
-These are the final results for the predictions.
-
-``` r
-print(y_pred)
-```
-> ![layers](https://i.imgur.com/SChKjYl.png)
-
-``` r
-print('The survival rate of the predicted Passengers is: ', "%.2f" % ((1 - sum(y_pred) / len(y_pred)) * 100), '%')
-```
-> ![layers](https://i.imgur.com/tyxM9s4.png)
-
-``` r
-submission = {'PassengerId': df_test.PassengerId, 'Survived': y_pred}
-
-submission = pd.DataFrame(data = submission)
+```r
+submission = pd.DataFrame({'Id':df_test.Id,'SalePrice':y_test})
 
 submission.to_csv('submission.csv', index=False)
 
 print('Submitted!')
 ```
-> ![layers](https://i.imgur.com/fAJyYe9.png)
+> Submitted!
 
-## 10) Conclusion
-On the first attempt, using the Logistic Regression predictor, we were able to predict data points at an accuracy of 0.75837 (75.84%). This was a good first prediction but it was clear that this could be improved. Tweaking parameters was not helpful and the accuracy was not increased at all. The only other option was to try more classifiers that might fit the model better. The Xtreme Gradient Boosting classifier (XGB) was then used and increased this accuracy to 0.77272 (77.27%) which was a slight improvement. From this point onwards it was almost impossible to increase the accuracy using the model we had built. Thus, the final accuracy of the model was 0.77272.
+## 6) Results
+These are the final results for the predictions.
 
-In future versions, we can look at other machine learning techniques such as deep learning neural networks to try to increase this accuracy and make a model more suitable for our data. We can also look into the best way to optimise parameters and observe how the model behaves as each parameter is changed.
+### Attempt 1:
 
+``` r
+print(y_test)
+```
+> ![layers](https://i.imgur.com/MliD8Ke.png)
+
+### Attempt 2:
+
+
+## 7) Conclusion
+Coming Soon
