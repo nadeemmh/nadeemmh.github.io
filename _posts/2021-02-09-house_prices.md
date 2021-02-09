@@ -460,8 +460,24 @@ y_test = model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
 
 ### Attempt 2
+```r
+ridge = Ridge()
+parameters = {'alpha':list(np.arange(0.0, 30.0, 0.01))}
+ridge_model= GridSearchCV(ridge, parameters, scoring='neg_mean_squared_error',cv=5)
+ridge_model.fit(X_train,y_train)
 
+print(ridge_model.best_estimator_)
 
+best_model = ridge_model.best_estimator_
+```
+> ![layers](https://i.imgur.com/JnnkQho.png)
+
+```r
+# Predictions
+y_test = best_model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
+```
+
+### Submitting
 ```r
 submission = pd.DataFrame({'Id':df_test.Id,'SalePrice':y_test})
 
@@ -482,10 +498,31 @@ print(y_test)
 ```
 > ![layers](https://i.imgur.com/MliD8Ke.png)
 
-The score for this attempt was: **0.14349**
+The score for this attempt was: **0.14349**.
+
+The lower the score, the better the accuracy of the model.
+
+This score placed me at 2580 out of 5158 which is roughly in the middle. There is room for improvement. 
 
 ### Attempt 2:
+This is the result of the second attempt:
 
+``` r
+print(y_test)
+```
+> ![layers](https://i.imgur.com/MU4MwLc.png)
+
+The score for this attempt was: **0.15770**.
+
+This attempt was clearly inferior to the first attempt, which means that the Extreme Gradient Boosting model is still the best one so far.
+
+Model and their respective scores: 
+
+**| Model |  Score  |
+|-------|---------|
+|  XGB  | 0.14349 |
+| Ridge | 0.15770 |
+|       |         |**
 
 ## 7) Conclusion
 Coming Soon
