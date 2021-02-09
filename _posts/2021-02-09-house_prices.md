@@ -516,13 +516,13 @@ The score for this attempt was: **0.15770**.
 
 This attempt was clearly inferior to the first attempt, which means that the Extreme Gradient Boosting model is still the best one so far.
 
-Model and their respective scores: 
+Table of the model attempts and their respective scores: 
 
-**| Model |  Score  |
+| Model |  Score  |
 |-------|---------|
 |  XGB  | 0.14349 |
 | Ridge | 0.15770 |
-|       |         |**
+|       |         |
 
 ## 7) Conclusion
 Coming Soon
