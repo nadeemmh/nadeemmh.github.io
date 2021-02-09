@@ -69,7 +69,7 @@ df_test.head()
 
 <br></p>
 
-The above outputs briefly show the contents of the data files (test and train) and it is clear that there are many missing values to be dealt with. Now that we know this, we can see how many missing values there are for each feature and can attempt to solve this problem.
+The above outputs briefly show the contents of the data files (test and train) and it we can assume that there are many missing values to be dealt with just by looking at the first 5 observations. Now that we know this, we can see how many missing values there are in total for each feature and can attempt to solve this problem.
 
 ``` r
 null_values_train = df_train.isnull().sum()
@@ -83,143 +83,204 @@ print(null_values_test)
 ```
 > ![layers](https://i.imgur.com/ZC2B1ie.png)
 
+It is clear that our initial assumption was correct and there are many missing values. It would be unwise to use features with too many missing values so we will drop features with more than 50% missing values, and we will attempt to fill in the rest of the values. 
 
+## 3) Feature Engineering
 
-## 3) Visualising Data
+The training and testing data sets that we are using in this report have many null values and the data needs to be cleaned in order to give acceptable predictions. If the feature has too many null values and/or is not relevant to predicting the model, we will drop the feature entirely. If the feature is important and has missing/null values, we will be filling those values manually. For floats/integers, we will use the mean to fill in the null values, and for objects we will be using the mode, and other values to fill in the nulls.
 
-By visualising the data, we can see more clearly how the data is behaving and what to look out for. We can visualise data by creating graphs such as histograms, bar charts, scatter graphs, etc. Different data requires different kinds of graphs.
-``` r
-# Look at numeric and categorical values separately 
-df_num = df_train[['Age', 'SibSp', 'Parch', 'Fare']] # histograms
-df_cat = df_train[['Survived', 'Pclass', 'Sex', 'Ticket', 'Cabin', 'Embarked']] # value counts
-```
-```r
-for col in df_num.columns:
-    plt.hist(df_num[col])
-    plt.title(col)
-    plt.show()
-```
-> ![layers](https://i.imgur.com/ColSd5D.png)
-<br></p>
-> ![layers](https://i.imgur.com/6FbbALh.png)
+We will be observing the training and testing data simultaneously and will be applying changes on both data sets where needed. This is often easier to do on two separate files, but in this case, we can handle both tasks together in one file.
+
+The test set is missing a column called "SalePrice" which is what we will use the training set to predict for the test set, otherwise, both datasets have the same features.
+
+We will go through the features systematically and will decide whether it is worth keeping or not. In this report, we will only mention the features that are relevant or worth looking at else the report would be too long!
+
+We can create a few simple functions that will help remove null values with ease. One function is for the training set and one is for the testing set. Though these could have been put together, we can use these separately if/when needed.
 
 ``` r
-# Compare survival rate across Age, SibSp, Parch, and Fare
-pd.pivot_table(df_train, index = 'Survived', values = ['Age', 'SibSp', 'Parch', 'Fare'])
-```
-
-> ![layers](https://i.imgur.com/2NLp5dv.png)
-
-The pivot table above shows the significance of the different attributes, to survival rate.
-
-``` r
-for col in df_cat.columns:
-    plt.bar(df_cat[col].value_counts().index, df_cat[col].value_counts())
-    plt.title(col)
-    plt.xticks(rotation=90)
-    plt.show()
-```
-
-> ![layers](https://i.imgur.com/G744sE2.png)
-
-<br></p>
-
-> ![layers](https://i.imgur.com/U9ckyJS.png)
-
-<br></p>
-
-> ![layers](https://i.imgur.com/3lkjnWe.png)
-
-``` r
-# Compare survival rate across Pclass, Sex, Embarked with the type of Ticket that was used.
-print(pd.pivot_table(df_train, index = 'Survived', columns = 'Pclass', values = 'Ticket', aggfunc = 'count'))
-print()
-print(pd.pivot_table(df_train, index = 'Survived', columns = 'Sex', values = 'Ticket', aggfunc = 'count'))
-print()
-print(pd.pivot_table(df_train, index = 'Survived', columns = 'Embarked', values = 'Ticket', aggfunc = 'count'))
-```
-> ![layers](https://i.imgur.com/R4QdBwX.png)
-
-## 4) Feature Engineering
-
-Simplifying features can help respresent the data most accurately for analysis or model development. Feature engineering can include splitting features, aggregating features, or combining features to create new ones, etc.
-
-``` r
-# creates catergoe=ries based on who had multiple cabins.
-
-df_cat.Cabin
-
-df_train['cabin_multiple'] = df_train.Cabin.apply(lambda x: 0 if pd.isna(x) else len(x.split(' ')))
-                                                                                          
-df_train['cabin_multiple'].value_counts()
-
-pd.pivot_table(df_train, index = 'Survived', columns = 'cabin_multiple', values = 'Ticket', aggfunc = 'count')
-```
-> ![layers](https://i.imgur.com/LBf7uYa.png)
-
-It is clear that that most people did not have multiple cabins.
-
-``` r
-# creates categories based on the cabin letter (n = null)
-
-df_train['cabin_letter'] = df_train.Cabin.apply(lambda x: str(x)[0])
-pd.pivot_table(df_train, index = 'Survived', columns = 'cabin_letter', values = 'Name', aggfunc = 'count')
-```
-> ![layers](https://i.imgur.com/TjzuLbq.png)
-
-A lot of the people in the Null column did not survive. Higher survival rate in B - E. Due to the consistent data, we can comfortably use the column letter as a categorical variable. This might give us better insight and reduct the number of total cabins.
-
-``` r
-# understand ticket values better 
-# numeric vs non numeric
-
-df_train['numeric_ticket'] = df_train.Ticket.apply(lambda x: 1 if x.isnumeric() else 0)
-# 1 if text else 0
-df_train['ticket_letters'] = df_train.Ticket.apply(lambda x: ''.join(x.split(' ')[:-1]).replace('.','').replace('/','').lower() if len(x.split(' ')[:-1]) > 0 else 0)
-```
-``` r
-df_train['numeric_ticket'].value_counts()
-```
-> ![layers](https://i.imgur.com/RT16lyX.png)
-
-``` r
-# this allows us to view all rows in dataframe through scrolling. This is for convenience.
-#pd.set_option("max rows", None)
-df_train['ticket_letters'].value_counts()
-```
-> ![layers](https://i.imgur.com/KqiJGIo.png)
-
-``` r
-# difference between numeric and non-numeric survival rate
-pd.pivot_table(df_train, index = "Survived", columns = 'numeric_ticket', values = 'Ticket', aggfunc = 'count')
-```
-> ![layers](https://i.imgur.com/SyVNPBj.png)
-
-Nothing of relevance or importance here.
-
-``` r
-# survival rate across different ticket types
-pd.pivot_table(df_train, index = 'Survived', columns = 'ticket_letters', values = 'Ticket', aggfunc = 'count')
-```
-> ![layers](https://i.imgur.com/nkuR61V.png)
-
-Nothing of revelence or importance here either.
-
-``` r
-# feature engineering on person's title
-df_train.Name.head(50)
-df_train['name_title'] = df_train.Name.apply(lambda x: x.split(',')[1].split('.')[0].strip())
+# function for filling null values in the training set features using mean or mode.
+def fill_null_train(feature, method):
+    if method == 'mean':
+        df_train[feature] = df_train[feature].fillna(df_train[feature].mean())
+        return df_test[feature].isnull().sum()
+    elif method == 'mode':
+        df_train[feature] = df_train[feature].fillna(df_train[feature].mode()[0])
+        return df_test[feature].isnull().sum()
+    else:
+        return 'Method Error: Choose mean or mode in second input.'
 ```
 
 ``` r
-df_train['name_title'].value_counts()
+# function for filling null values in the testing set features using mean or mode.
+def fill_null_test(feature, method):
+    if method == 'mean':
+        df_test[feature] = df_test[feature].fillna(df_test[feature].mean())
+        return df_test[feature].isnull().sum()
+    elif method == 'mode':
+        df_test[feature] = df_test[feature].fillna(df_test[feature].mode()[0])
+        return df_test[feature].isnull().sum()
+    else:
+        return 'Method Error: Choose mean or mode in second input.'
 ```
-> ![layers](https://i.imgur.com/P3hvKaD.png)
 
 ``` r
-pd.pivot_table(df_train, index = 'Survived', columns = 'name_title', values = 'Name', aggfunc = 'count')
+#function for dropping a feature in the training set.
+def drop_train(feature):
+    df_train.drop([feature], axis = 1, inplace = True)
 ```
-> ![layers](https://i.imgur.com/Ru0bY2z.png)
+
+``` r
+#function for dropping a feature in the testing set.
+def drop_test(feature):
+    df_test.drop([feature], axis = 1, inplace = True)
+```
+
+We can now use these functions for our feature engineering. First we fill the features which only have missing values in the test set.
+
+``` r
+# fill missing values using the mode (since it is an object which can only take a few values)
+# do this only for test set since train set already has zero null values in MSZoning
+fill_null_test('MSZoning', 'mode')
+```
+
+Now we can fill in the values using the mean when necessary. We only do this if the feature is a float64 value.
+
+``` r
+# "LotFrontage" is a float64 value so we can fill the null values using the mean.
+fill_null_test('LotFrontage', 'mean')
+fill_null_train('LotFrontage', 'mean')
+```
+
+Next we can drop all the insignificant features that either provide no usefulness, or have too many missing values to be considered in the prediction.
+
+``` r
+# we remove these features entirely due to the large amount of null values 
+drop_train('Alley')
+drop_test('Alley')
+
+drop_train('GarageYrBlt')
+drop_test('GarageYrBlt')
+
+drop_train('PoolQC')
+drop_test('PoolQC')
+
+drop_train('Fence')
+drop_test('Fence')
+
+drop_train('MiscFeature')
+drop_test('MiscFeature')
+```
+
+Now we can fill in the missing values for all the features that have any, using the mode.
+
+``` r
+# fill missing values using the mode for both train and test
+fill_null_train('BsmtCond', 'mode')
+fill_null_test('BsmtCond', 'mode')
+
+fill_null_train('BsmtQual', 'mode')
+fill_null_test('BsmtQual', 'mode')
+
+fill_null_train('FireplaceQu', 'mode')
+fill_null_test('FireplaceQu', 'mode')
+
+fill_null_train('GarageType', 'mode')
+fill_null_test('GarageType', 'mode')
+
+fill_null_train('GarageFinish', 'mode')
+fill_null_test('GarageFinish', 'mode')
+
+fill_null_train('GarageQual', 'mode')
+fill_null_test('GarageQual', 'mode')
+
+fill_null_train('GarageCond', 'mode')
+fill_null_test('GarageCond', 'mode')
+
+fill_null_train('MasVnrType', 'mode')
+fill_null_test('MasVnrType', 'mode')
+
+fill_null_train('MasVnrArea', 'mode')
+fill_null_test('MasVnrArea', 'mode')
+
+fill_null_train('BsmtExposure', 'mode')
+fill_null_test('BsmtExposure', 'mode')
+
+fill_null_train('BsmtFinType1', 'mode')
+fill_null_test('BsmtFinType1', 'mode')
+
+fill_null_train('BsmtFinType2', 'mode')
+fill_null_test('BsmtFinType2', 'mode')
+```
+
+Here, we fill missing values for features that are only in train.
+
+``` r
+# fill missing values using the mode for only train
+fill_null_train('Electrical', 'mode')
+```
+
+Here, we fill missing values for features that are only in test.
+
+``` r
+# fill missing values using the mode for only test
+fill_null_test('Utilities', 'mode')
+
+fill_null_test('Exterior1st', 'mode')
+
+fill_null_test('Exterior2nd', 'mode')
+
+fill_null_test('BsmtFullBath', 'mode')
+
+fill_null_test('BsmtHalfBath', 'mode')
+
+fill_null_test('KitchenQual', 'mode')
+
+fill_null_test('Functional', 'mode')
+
+fill_null_test('SaleType', 'mode')
+
+# fill missing values using the mode for only test
+fill_null_test('BsmtFinSF1', 'mean')
+
+fill_null_test('BsmtFinSF2', 'mean')
+
+fill_null_test('BsmtUnfSF', 'mean')
+
+fill_null_test('TotalBsmtSF', 'mean')
+
+fill_null_test('GarageCars', 'mean')
+
+fill_null_test('GarageArea', 'mean')
+```
+
+Now that we can removed or filled all the null values, we can check if there are any remaining null values in any of the data.
+
+``` r
+df_train.isnull().sum()
+```
+> ![layers](https://i.imgur.com/IEMe5NH.png)
+
+
+``` r
+df_test.isnull().sum()
+```
+> ![layers](https://i.imgur.com/rSJbvSz.png)
+
+We can now handle the catergorical features by creating a feature set that will be used later.
+
+``` r
+# Creating feature set to be used later
+
+columns = ['MSZoning', 'Street', 'LotShape', 'LandContour', 'Utilities', 'LotConfig', 'LandSlope', 'Neighborhood', 
+           'Condition2', 'BldgType', 'Condition1', 'HouseStyle', 'SaleType', 'SaleCondition', 'ExterCond', 'ExterQual', 
+           'Foundation', 'BsmtQual', 'BsmtCond', 'BsmtExposure', 'BsmtFinType1', 'BsmtFinType2', 'RoofStyle', 'RoofMatl', 
+           'Exterior1st', 'Exterior2nd', 'MasVnrType', 'Heating', 'HeatingQC', 'CentralAir', 'Electrical', 'KitchenQual', 
+           'Functional', 'FireplaceQu', 'GarageType', 'GarageFinish', 'GarageQual', 'GarageCond', 'PavedDrive'
+]
+len(columns)
+```
+> 39
+
 
 ## 5) Data Preprocessing
 Data preprocessing (or data mining) is used to transform the raw data and make it more usable and useful. Here, data is cleaned and missing values are restored or handled.
