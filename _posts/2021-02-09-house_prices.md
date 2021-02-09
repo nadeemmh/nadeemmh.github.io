@@ -1,1 +1,428 @@
+---
+title: "Kaggle House Prices Predictions Using Advanced Regression Techniques"
+categories:
+  - data science
+  - machine learning
+  - predictive modelling
+tags:
+  - data
+  - scientist
+  - science
+  - analyst
+  - python
+  - machine
+  - learning
+  - regression
+---
+
+In this post we will attempt to predict house prices Ames, Iowa, using 79 explanatory variables describing (almost) every aspect of residential homes.  
+
+
+## Overview
+
+### 1) Loading Data
+### 2) Understand Data
+### 3) Feature Engineering and Data Preprocessing
+### 4) Model Testing and Building
+### 5) Model Optimisation
+### 6) Results
+### 7) Conclusions
+
+## Importing Packages
+
+``` r
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+pd.set_option('display.max_rows', None)
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+        
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+## 1) Loading Data
+
+``` r
+df_train = pd.read_csv('/kaggle/input/house-prices-advanced-regression-techniques/train.csv') # importing training set
+df_test = pd.read_csv('/kaggle/input/house-prices-advanced-regression-techniques/test.csv') # importing testing set
+```
+
+## 2) Understand Data
+
+In order to use and accurately predict the data, we must first understand the data and be able to extract information from it properly. Understanding the data allows us to plan ahead and clean the data properly in the following stages.
+
+``` r
+df_train.head()
+```
+> ![layers](https://i.imgur.com/IwB2NLi.png)
+
+<br></p>
+
+``` r
+df_test.head()
+```
+> ![layers](https://i.imgur.com/Byzz0qL.png)
+
+<br></p>
+
+The above outputs briefly show the contents of the data files (test and train) and it is clear that there are many missing values to be dealt with. Now that we know this, we can see how many missing values there are for each feature and can attempt to solve this problem.
+
+``` r
+null_values_train = df_train.isnull().sum()
+print(null_values_train)
+```
+> ![layers](https://i.imgur.com/OmxJkiJ.png)
+
+``` r
+null_values_test = df_test.isnull().sum()
+print(null_values_test)
+```
+> ![layers](https://i.imgur.com/ZC2B1ie.png)
+
+
+
+## 3) Visualising Data
+
+By visualising the data, we can see more clearly how the data is behaving and what to look out for. We can visualise data by creating graphs such as histograms, bar charts, scatter graphs, etc. Different data requires different kinds of graphs.
+``` r
+# Look at numeric and categorical values separately 
+df_num = df_train[['Age', 'SibSp', 'Parch', 'Fare']] # histograms
+df_cat = df_train[['Survived', 'Pclass', 'Sex', 'Ticket', 'Cabin', 'Embarked']] # value counts
+```
+```r
+for col in df_num.columns:
+    plt.hist(df_num[col])
+    plt.title(col)
+    plt.show()
+```
+> ![layers](https://i.imgur.com/ColSd5D.png)
+<br></p>
+> ![layers](https://i.imgur.com/6FbbALh.png)
+
+``` r
+# Compare survival rate across Age, SibSp, Parch, and Fare
+pd.pivot_table(df_train, index = 'Survived', values = ['Age', 'SibSp', 'Parch', 'Fare'])
+```
+
+> ![layers](https://i.imgur.com/2NLp5dv.png)
+
+The pivot table above shows the significance of the different attributes, to survival rate.
+
+``` r
+for col in df_cat.columns:
+    plt.bar(df_cat[col].value_counts().index, df_cat[col].value_counts())
+    plt.title(col)
+    plt.xticks(rotation=90)
+    plt.show()
+```
+
+> ![layers](https://i.imgur.com/G744sE2.png)
+
+<br></p>
+
+> ![layers](https://i.imgur.com/U9ckyJS.png)
+
+<br></p>
+
+> ![layers](https://i.imgur.com/3lkjnWe.png)
+
+``` r
+# Compare survival rate across Pclass, Sex, Embarked with the type of Ticket that was used.
+print(pd.pivot_table(df_train, index = 'Survived', columns = 'Pclass', values = 'Ticket', aggfunc = 'count'))
+print()
+print(pd.pivot_table(df_train, index = 'Survived', columns = 'Sex', values = 'Ticket', aggfunc = 'count'))
+print()
+print(pd.pivot_table(df_train, index = 'Survived', columns = 'Embarked', values = 'Ticket', aggfunc = 'count'))
+```
+> ![layers](https://i.imgur.com/R4QdBwX.png)
+
+## 4) Feature Engineering
+
+Simplifying features can help respresent the data most accurately for analysis or model development. Feature engineering can include splitting features, aggregating features, or combining features to create new ones, etc.
+
+``` r
+# creates catergoe=ries based on who had multiple cabins.
+
+df_cat.Cabin
+
+df_train['cabin_multiple'] = df_train.Cabin.apply(lambda x: 0 if pd.isna(x) else len(x.split(' ')))
+                                                                                          
+df_train['cabin_multiple'].value_counts()
+
+pd.pivot_table(df_train, index = 'Survived', columns = 'cabin_multiple', values = 'Ticket', aggfunc = 'count')
+```
+> ![layers](https://i.imgur.com/LBf7uYa.png)
+
+It is clear that that most people did not have multiple cabins.
+
+``` r
+# creates categories based on the cabin letter (n = null)
+
+df_train['cabin_letter'] = df_train.Cabin.apply(lambda x: str(x)[0])
+pd.pivot_table(df_train, index = 'Survived', columns = 'cabin_letter', values = 'Name', aggfunc = 'count')
+```
+> ![layers](https://i.imgur.com/TjzuLbq.png)
+
+A lot of the people in the Null column did not survive. Higher survival rate in B - E. Due to the consistent data, we can comfortably use the column letter as a categorical variable. This might give us better insight and reduct the number of total cabins.
+
+``` r
+# understand ticket values better 
+# numeric vs non numeric
+
+df_train['numeric_ticket'] = df_train.Ticket.apply(lambda x: 1 if x.isnumeric() else 0)
+# 1 if text else 0
+df_train['ticket_letters'] = df_train.Ticket.apply(lambda x: ''.join(x.split(' ')[:-1]).replace('.','').replace('/','').lower() if len(x.split(' ')[:-1]) > 0 else 0)
+```
+``` r
+df_train['numeric_ticket'].value_counts()
+```
+> ![layers](https://i.imgur.com/RT16lyX.png)
+
+``` r
+# this allows us to view all rows in dataframe through scrolling. This is for convenience.
+#pd.set_option("max rows", None)
+df_train['ticket_letters'].value_counts()
+```
+> ![layers](https://i.imgur.com/KqiJGIo.png)
+
+``` r
+# difference between numeric and non-numeric survival rate
+pd.pivot_table(df_train, index = "Survived", columns = 'numeric_ticket', values = 'Ticket', aggfunc = 'count')
+```
+> ![layers](https://i.imgur.com/SyVNPBj.png)
+
+Nothing of relevance or importance here.
+
+``` r
+# survival rate across different ticket types
+pd.pivot_table(df_train, index = 'Survived', columns = 'ticket_letters', values = 'Ticket', aggfunc = 'count')
+```
+> ![layers](https://i.imgur.com/nkuR61V.png)
+
+Nothing of revelence or importance here either.
+
+``` r
+# feature engineering on person's title
+df_train.Name.head(50)
+df_train['name_title'] = df_train.Name.apply(lambda x: x.split(',')[1].split('.')[0].strip())
+```
+
+``` r
+df_train['name_title'].value_counts()
+```
+> ![layers](https://i.imgur.com/P3hvKaD.png)
+
+``` r
+pd.pivot_table(df_train, index = 'Survived', columns = 'name_title', values = 'Name', aggfunc = 'count')
+```
+> ![layers](https://i.imgur.com/Ru0bY2z.png)
+
+## 5) Data Preprocessing
+Data preprocessing (or data mining) is used to transform the raw data and make it more usable and useful. Here, data is cleaned and missing values are restored or handled.
+
+``` r
+# create all the catergorical vairables that we did in previous steps for both train and test sets.
+# most of this is taken from previous code
+df_all['cabin_multiple'] = df_all.Cabin.apply(lambda x: 0 if pd.isna(x) else len(x.split(' ')))
+df_all['cabin_adv'] = df_all.Cabin.apply(lambda x: str(x)[0])
+df_all['numeric_ticket'] = df_all.Ticket.apply(lambda x: 1 if x.isnumeric() else 0)
+df_all['ticket_letters'] = df_all.Ticket.apply(lambda x: ''.join(x.split(' ')[:-1]).replace('.','').replace('/','').lower() if len(x.split(' ')[:-1]) > 0 else 0)
+df_all['name_title'] = df_all.Name.apply(lambda x: x.split(',')[1].split('.')[0].strip())
+
+# create nulls for continuous data
+df_all.Age = df_all.Age.fillna(df_train.Age.median()) # take median of age to fill because it is not normally distributed
+df_all.Fare = df_all.Fare.fillna(df_train.Fare.median()) # take median of fare to fill because it is not normally distributed
+```
+
+``` r
+# drop null values in 'embarked' rows. This only happens twice in the training and never in test.
+df_all.dropna(subset=['Embarked'], inplace = True)
+``` 
+
+``` r
+# log norm of fare 
+df_all['norm_fare'] = np.log(df_all.Fare+1)
+df_all['norm_fare'].hist()
+```
+> ![layers](https://i.imgur.com/qBd6nrv.png)
+
+``` r
+# converted fare to category for use
+df_all.Pclass = df_all.Pclass.astype(str)
+```
+
+``` r
+# created dummy variables from categories 
+df_dummies = pd.get_dummies(df_all[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'norm_fare', 'Embarked', 'cabin_adv', 'cabin_multiple', 'numeric_ticket', 'name_title', 'train_test']])
+```
+
+``` r
+# split to train test again
+X_train = df_dummies[df_all.train_test == 1].drop(['train_test'], axis = 1)
+X_test = df_dummies[df_all.train_test == 0].drop(['train_test'], axis = 1)
+
+y_train = df_all[df_all.train_test == 1].Survived
+```
+
+## 6) Data Scaling
+Data scaling is used to normalize the range of the values of the data. We transfrom the data so that it is normalised (between 0 and 1).
+
+``` r
+from sklearn.preprocessing import StandardScaler
+df_scaler = StandardScaler()
+df_dummies_scaled = df_dummies.copy()
+df_dummies_scaled[['Age', 'SibSp', 'Parch', 'norm_fare']] = df_scaler.fit_transform(df_dummies_scaled[['Age', 'SibSp', 'Parch', 'norm_fare']])
+df_dummies_scaled
+```
+> ![layers](https://i.imgur.com/yZrEuw8.png)
+
+``` r
+X_train_scaled = df_dummies_scaled[df_dummies_scaled.train_test == 1].drop(['train_test'], axis = 1)
+X_test_scaled = df_dummies_scaled[df_dummies_scaled.train_test == 0].drop(['train_test'], axis = 1)
+
+y_train = df_all[df_all.train_test == 1].Survived
+``` 
+
+## 7) Model Testing and Building
+Here we build the model and can experiment with different models with default parameters.
+
+``` r
+# import all necessary packages from sklearn
+from sklearn.model_selection import cross_val_score
+from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
+from sklearn import tree
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from xgboost import XGBClassifier
+```
+We will try a few of the model using 5 fold cross validation to get a baseline model to see which model performs the best and delivers the most accurate results.
+
+``` r
+# We use Naive Bayes as a baseline for the classification tasks
+gnb = GaussianNB()
+cv = cross_val_score(gnb, X_train_scaled, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+``` 
+> ![layers](https://i.imgur.com/NRjJMoJ.png)
+
+``` r
+# Logistic Regression test
+lr = LogisticRegression(max_iter = 1000)
+cv = cross_val_score(lr, X_train, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+``` 
+> ![layers](https://i.imgur.com/654ZFWp.png)
+
+``` r
+# Decision Tree test
+dt = tree.DecisionTreeClassifier(random_state = 1)
+cv = cross_val_score(dt, X_train_scaled, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+``` 
+> ![layers](https://i.imgur.com/jrcv9Cj.png)
+
+``` r
+# KNN test
+knn = KNeighborsClassifier()
+cv = cross_val_score(knn, X_train, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+``` 
+> ![layers](https://i.imgur.com/xnMSN20.png)
+
+``` r
+# Random Forest test
+rf = RandomForestClassifier(random_state = 1)
+cv = cross_val_score(rf, X_train, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+``` 
+> ![layers](https://i.imgur.com/Nqju8IZ.png)
+
+``` r
+# Support Vector Machine
+svc = SVC(probability = True)
+cv = cross_val_score(svc, X_train_scaled, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+``` 
+> ![layers](https://i.imgur.com/LRyzzXU.png)
+
+``` r
+# Extreme Gradient Boosting
+xgb = XGBClassifier(random_state = 1)
+cv = cross_val_score(xgb, X_train_scaled, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+``` 
+> ![layers](https://i.imgur.com/6oyha7C.png)
+
+
+> ![layers](https://i.imgur.com/CU5UHkl.png)
+
+From the table above, it is clear that the Support Vector Machine model performed the best out of the group in the 5-fold cross validation test.
+
+## 8) Model Optimisation
+The "Voting Classifier" takes all of the inputs and averages the results. For a "hard" voting classifier each classifier gets 1 vote "yes" or "no" and the resutl is just a popular vote.
+
+A "soft" classifier averages the confidence of each of the models. If the average confidence is > 50% that it is a 1 it will be counted as such.
+
+``` r 
+from sklearn.ensemble import VotingClassifier
+```
+
+``` r
+voting_cl = VotingClassifier(estimators = [('lr', lr), ('knn', knn), ('rf', rf), ('dt', dt), ('gnb', gnb), ('svc', svc)], voting = 'soft')
+
+cv = cross_val_score(voting_cl, X_train_scaled, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+```
+> ![layers](https://i.imgur.com/NMsJ9la.png)
+
+``` r
+voting_cl.fit(X_train_scaled, y_train)
+
+y_pred = voting_cl.predict(X_test_scaled).astype(int)
+
+y_pred = pd.Series(voting_cl.predict(X_test_scaled).astype(int))
+```
+
+## 9) Results
+These are the final results for the predictions.
+
+``` r
+print(y_pred)
+```
+> ![layers](https://i.imgur.com/SChKjYl.png)
+
+``` r
+print('The survival rate of the predicted Passengers is: ', "%.2f" % ((1 - sum(y_pred) / len(y_pred)) * 100), '%')
+```
+> ![layers](https://i.imgur.com/tyxM9s4.png)
+
+``` r
+submission = {'PassengerId': df_test.PassengerId, 'Survived': y_pred}
+
+submission = pd.DataFrame(data = submission)
+
+submission.to_csv('submission.csv', index=False)
+
+print('Submitted!')
+```
+> ![layers](https://i.imgur.com/fAJyYe9.png)
+
+## 10) Conclusion
+On the first attempt, using the Logistic Regression predictor, we were able to predict data points at an accuracy of 0.75837 (75.84%). This was a good first prediction but it was clear that this could be improved. Tweaking parameters was not helpful and the accuracy was not increased at all. The only other option was to try more classifiers that might fit the model better. The Xtreme Gradient Boosting classifier (XGB) was then used and increased this accuracy to 0.77272 (77.27%) which was a slight improvement. From this point onwards it was almost impossible to increase the accuracy using the model we had built. Thus, the final accuracy of the model was 0.77272.
+
+In future versions, we can look at other machine learning techniques such as deep learning neural networks to try to increase this accuracy and make a model more suitable for our data. We can also look into the best way to optimise parameters and observe how the model behaves as each parameter is changed.
 
