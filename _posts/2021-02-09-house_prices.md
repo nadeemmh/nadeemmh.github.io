@@ -502,7 +502,7 @@ The score for this attempt was: **0.14349**.
 
 The lower the score, the better the accuracy of the model.
 
-This score placed me at 2580 out of 5158 which is roughly in the middle. There is room for improvement. 
+This score placed me at rank 2580 which is roughly in the middle (5158 total). There is room for improvement. 
 
 ### Attempt 2:
 This is the result of the second attempt:
