@@ -475,11 +475,14 @@ print('Submitted!')
 These are the final results for the predictions.
 
 ### Attempt 1:
+This is the result of the first attempt:
 
 ``` r
 print(y_test)
 ```
 > ![layers](https://i.imgur.com/MliD8Ke.png)
+
+The score for this attempt was: **0.14349**
 
 ### Attempt 2:
 
