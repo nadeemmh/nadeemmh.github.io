@@ -85,7 +85,7 @@ print(null_values_test)
 
 It is clear that our initial assumption was correct and there are many missing values. It would be unwise to use features with too many missing values so we will drop features with more than 50% missing values, and we will attempt to fill in the rest of the values. 
 
-## 3) Feature Engineering
+## 3) Feature Engineering and Data Preprocessing
 
 The training and testing data sets that we are using in this report have many null values and the data needs to be cleaned in order to give acceptable predictions. If the feature has too many null values and/or is not relevant to predicting the model, we will drop the feature entirely. If the feature is important and has missing/null values, we will be filling those values manually. For floats/integers, we will use the mean to fill in the null values, and for objects we will be using the mode, and other values to fill in the nulls.
 
@@ -321,6 +321,41 @@ final_df.shape
 ```
 > (2919, 76)
 
+Now we can use the function created earlier to convert all features in this new dataframe into catergorical features.
+
+```r
+final_df = category_onehot_multcols(columns)
+```
+> ![layers](https://i.imgur.com/yIQLbFn.png)
+
+```r
+final_df.shape
+```
+> (2919, 237)
+
+We can now see the new dataframe
+
+```r
+final_df = final_df.loc[:,~final_df.columns.duplicated()]
+
+final_df
+```
+> ![layers](https://i.imgur.com/AY9cWPN.png)
+
+We can now split this dataframe into the train and test datasets.
+
+```r
+df_Train = final_df.iloc[:1460,:]
+df_Test = final_df.iloc[1460:,:]
+```
+
+We now drop the "Sale Price" feature from the training set because we do not have any of these values (all the values are null).
+
+```r
+X_train = df_Train.drop(['SalePrice'], axis = 1).values
+y_train = df_Train['SalePrice'].values
+```
+
 
 ## 5) Data Preprocessing
 Data preprocessing (or data mining) is used to transform the raw data and make it more usable and useful. Here, data is cleaned and missing values are restored or handled.
@@ -369,108 +404,79 @@ X_test = df_dummies[df_all.train_test == 0].drop(['train_test'], axis = 1)
 y_train = df_all[df_all.train_test == 1].Survived
 ```
 
-## 6) Data Scaling
-Data scaling is used to normalize the range of the values of the data. We transfrom the data so that it is normalised (between 0 and 1).
-
-``` r
-from sklearn.preprocessing import StandardScaler
-df_scaler = StandardScaler()
-df_dummies_scaled = df_dummies.copy()
-df_dummies_scaled[['Age', 'SibSp', 'Parch', 'norm_fare']] = df_scaler.fit_transform(df_dummies_scaled[['Age', 'SibSp', 'Parch', 'norm_fare']])
-df_dummies_scaled
-```
-> ![layers](https://i.imgur.com/yZrEuw8.png)
-
-``` r
-X_train_scaled = df_dummies_scaled[df_dummies_scaled.train_test == 1].drop(['train_test'], axis = 1)
-X_test_scaled = df_dummies_scaled[df_dummies_scaled.train_test == 0].drop(['train_test'], axis = 1)
-
-y_train = df_all[df_all.train_test == 1].Survived
-``` 
+By doing this we have now created the train/test split which we can now use to build a model and generate predictions.
 
 ## 7) Model Testing and Building
-Here we build the model and can experiment with different models with default parameters.
+Here we build the model and can experiment with different models with default parameters. We 
 
 ``` r
-# import all necessary packages from sklearn
 from sklearn.model_selection import cross_val_score
-from sklearn.naive_bayes import GaussianNB
-from sklearn.linear_model import LogisticRegression
+from sklearn import linear_model
+from sklearn.linear_model import RidgeCV
+import xgboost as xgb
 from sklearn import tree
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.svm import SVC
+from sklearn.linear_model import Lasso
 from xgboost import XGBClassifier
+from xgboost import XGBRegressor
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import GridSearchCV
 ```
 We will try a few of the model using 5 fold cross validation to get a baseline model to see which model performs the best and delivers the most accurate results.
 
 ``` r
-# We use Naive Bayes as a baseline for the classification tasks
-gnb = GaussianNB()
-cv = cross_val_score(gnb, X_train_scaled, y_train, cv = 5)
+# Decision Tree Regressor
+dt = tree.DecisionTreeRegressor()
+cv = cross_val_score(dt, X_train, y_train, cv = 5)
 print(cv)
 print(cv.mean())
+mean_dt = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/NRjJMoJ.png)
+> ![layers](https://i.imgur.com/3QfSNY3.png)
 
 ``` r
-# Logistic Regression test
-lr = LogisticRegression(max_iter = 1000)
-cv = cross_val_score(lr, X_train, y_train, cv = 5)
+# Bayesian Ridge Regression
+brr = linear_model.BayesianRidge()
+cv = cross_val_score(brr, X_train, y_train, cv = 5)
 print(cv)
 print(cv.mean())
+mean_brr = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/654ZFWp.png)
+> ![layers](https://i.imgur.com/fuic1MY.png)
 
 ``` r
-# Decision Tree test
-dt = tree.DecisionTreeClassifier(random_state = 1)
-cv = cross_val_score(dt, X_train_scaled, y_train, cv = 5)
+# Ridge CV
+rdg = RidgeCV(alphas=(0.01, 0.05, 0.1, 0.3, 1, 3, 5, 10))
+cv = cross_val_score(rdg, X_train, y_train, cv = 5)
 print(cv)
 print(cv.mean())
+mean_rdg = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/jrcv9Cj.png)
-
-``` r
-# KNN test
-knn = KNeighborsClassifier()
-cv = cross_val_score(knn, X_train, y_train, cv = 5)
-print(cv)
-print(cv.mean())
-``` 
-> ![layers](https://i.imgur.com/xnMSN20.png)
-
-``` r
-# Random Forest test
-rf = RandomForestClassifier(random_state = 1)
-cv = cross_val_score(rf, X_train, y_train, cv = 5)
-print(cv)
-print(cv.mean())
-``` 
-> ![layers](https://i.imgur.com/Nqju8IZ.png)
-
-``` r
-# Support Vector Machine
-svc = SVC(probability = True)
-cv = cross_val_score(svc, X_train_scaled, y_train, cv = 5)
-print(cv)
-print(cv.mean())
-``` 
-> ![layers](https://i.imgur.com/LRyzzXU.png)
+> ![layers](https://i.imgur.com/rQuH7ge.png)
 
 ``` r
 # Extreme Gradient Boosting
-xgb = XGBClassifier(random_state = 1)
-cv = cross_val_score(xgb, X_train_scaled, y_train, cv = 5)
+xgb = xgb.XGBRegressor(n_estimators=340, max_depth=2, learning_rate=0.2)
+cv = cross_val_score(xgb, X_train, y_train, cv = 5)
 print(cv)
 print(cv.mean())
+mean_xgb = round(cv.mean(), 4)
 ``` 
-> ![layers](https://i.imgur.com/6oyha7C.png)
+> ![layers](https://i.imgur.com/ev88Spp.png)
+
+``` r
+# Lasso Regression
+lso = Lasso(alpha=0.1,random_state=0)
+cv = cross_val_score(lso, X_train, y_train, cv = 5)
+print(cv)
+print(cv.mean())
+mean_lso = round(cv.mean(), 4)
+``` 
+> ![layers](https://i.imgur.com/5XQqo76.png)
 
 
-> ![layers](https://i.imgur.com/CU5UHkl.png)
+> ![layers](https://i.imgur.com/eietcXE.png)
 
-From the table above, it is clear that the Support Vector Machine model performed the best out of the group in the 5-fold cross validation test.
+From the table above, it is clear that the Extreme Gradient Bossting model performed the best out of the group in the 5-fold cross validation test. We can now optimise this model to try and predict the data.
 
 ## 8) Model Optimisation
 The "Voting Classifier" takes all of the inputs and averages the results. For a "hard" voting classifier each classifier gets 1 vote "yes" or "no" and the resutl is just a popular vote.
