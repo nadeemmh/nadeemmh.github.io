@@ -1,14 +1,12 @@
 ---
 title: "Deep Learning Explained: Neural Networks"
 categories:
-  - data science
+  - research
 tags:
-  - data
-  - scientist
-  - science
-  - analyst
-  - python
+  - machine learning
   - deep learning
+  - theory
+  - educational
 ---
 
 This post explains how deep learning neural networks work and how they are used to make predictions using unlabeled data. Deep learning is an unsupervised machine learning method that imitates the workings of the human brain in processing data and creating patterns for use in decision making. While machine learning uses simpler concepts, deep learning works with artificial neural networks, which are designed to imitate how humans think and learn. We will understand some of the key definitions related to deep learning NNs and then dive into the structure of neural networks and how everything comes together.
