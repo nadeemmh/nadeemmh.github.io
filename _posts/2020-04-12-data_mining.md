@@ -1,7 +1,7 @@
 ---
 title: "University: CS3440 - Data Mining"
 categories:
-  - University
+  - university
 tags:
   - data mining
   - computer science
