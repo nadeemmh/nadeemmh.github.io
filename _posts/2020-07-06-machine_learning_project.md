@@ -67,8 +67,6 @@ The values for all parameters L(y | b<sub>0</sub>, b<sub>1</sub>, ∑, P<sub>0</
 
 ![layers](https://i.imgur.com/UqmRKff.png)
 
-![layers](https://i.imgur.com/FMZlpx2.png)
-
 |          Variable            | Denotation | Value |
 |------------------------------|------------|-------|
 | Total number of data entries |     N      |  195 |
