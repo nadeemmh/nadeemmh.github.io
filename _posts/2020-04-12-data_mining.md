@@ -10,18 +10,12 @@ tags:
 ---
 
 ### Abstract 
-This report investigates biological properties of protein sequences using data created by
-parsing existing proteomic sequences, retrieved from the online databases IEDB. The training
-data set has 68 unique attributes with 66 of them being numeric. The goal of this investigation
-is to predit whether or not a given observation is a positive epitope.
+This report investigates biological properties of protein sequences using data created by parsing existing proteomic sequences, retrieved from the online databases IEDB. The training data set has 68 unique attributes with 66 of them being numeric. The goal of this investigation is to predit whether or not a given observation is a positive epitope.
 
 ## 1 Introduction
-This report gives an outline solution of the 2020 Data Mining (CS3440) coursework. It is not
-intended to be a complete report, but rather, shows the development process of a data mining
-experiment.
+This report gives an outline solution of the 2020 Data Mining (CS3440) coursework. It is not intended to be a complete report, but rather, shows the development process of a data mining experiment.
 
-The goal is to develop models to classify good and bad predictions. We will highlight some of
-the results and key issues that occur when following a systematic data mining process.
+The goal is to develop models to classify good and bad predictions. We will highlight some of the results and key issues that occur when following a systematic data mining process.
 
 ## 2 Exploratory Data Analysis
 Upon loading the training data (CWData_train.arff ), it is clear that from the 68 attributes, 1 is
@@ -113,3 +107,131 @@ Upon further evaluation, we can see that with or without PCA applied, the discre
 returns a much lower accuracy for the KNN model and as a result, is always lower than the other
 two filters and the benchmark. Furthermore, it appears that thus far, the accuracies for the KNN
 benchmark, normalize and standardize filters are always identical.
+
+## 4 Modelling
+In this section we will explore the modelling process in more detail and select the optimal parameters
+for each model. We will further inspect the characteristics of the models and filters to see
+which would be the most suitable for our dataset.
+
+### 4.1 Model Development
+Here, we will further develop each model and strive to find a final model with a higher accuracy
+than we already have.
+
+#### 4.1.1 Naive Bayes 
+When examining the Naive Bayes model, we can see that it performed much better when attributes
+with missing data were removed. This accuracy was further increased when PCA was applied and
+the highest accuracy was achieved with PCA and the ‘Discretize’ filter was applied. We can
+further develop this model by using a kernel density estimator to approxiamte the non-Gaussian
+distributions. This is shown in Table 4 where it is compared to the accuracy of the PCA discretize
+filter which is denoted as ‘Naive Bayes with Kernel OFF’ entry, in which we have seen the highest
+accuracy so far. The results from this table clearly indicate that the kernel estimator has the
+highest accuracy for this model.
+
+|               Model                 | Accuracy |
+|-------------------------------------|----------|
+| Naive Bayes with Kernel OFF (PCA-D) | 69.3267% |
+|      Naive Bayes with Kernel ON     | 69.5167% |
+
+Table 4: Results for Naive Bayes with Kernel filter and applied compared to the PCA Discretize filter.
+
+#### 4.1.2 K-Nearest-Neighbour (KNN)
+Looking at the KNN model, we can say that the benchmark model has been of the highest
+accuracy so far whilst maintaining the lowest computational complexity. This accuracy was maintained
+throughout the experimentation process with some drops, PCA Discretize having the lowest
+accuracy. We can further develop this model by applying distance weighting (1/distance and 1.distance).
+This is shown in Table 5 where we can see that the distance weighting has no effect of the
+accuracy of the model for our dataset.
+
+|    Model   | Accuracy |
+|------------|----------|
+|  Standard  |  77.19%  |
+| 1/distance |  77.19%  |
+| 1.distance |  77.19%  |
+
+Table 5: Results for distance weighting compared to no distance weighting for the KNN model.
+
+#### 4.1.3 Analysis
+We can confidently deduce that the KNN model is considerably more accurate than the Naive
+Bayes model. We now run this on our test set, where we get an accuracy of 77.88% shown in
+Table 6. This result is extremely close to the accuracy of the training set (differing by less than
+1%).
+
+|     Model    | Accuracy |
+|--------------|----------|
+| Training Set |  77.19%  |
+|   Test Set   |  77.88%  |
+
+Table 6: Comparison of accuracies for training set and test set.
+
+### 4.2 Cost-Based Modelling
+For cost-based modelling, we have two options. The first option is to reiterate the majority of the
+former processes while using an unequal cost matrix,. The second, much simpler option, is the
+approach of using the same parameter settings as used before in the equal-cost scenario. The goal
+is to minimize the cost as much as possible.
+
+In the unequal cost scenario, the cost of misclassifying a bad credit risk (as good) is four times
+greater than that of misclassifying a good credit (as bad). We can respresent this as a 2x2 matrix
+as shown below:
+
+│0.0   1.0│
+
+│4.0   0.0│
+
+#### 4.2.1 Naive Bayes
+For the Naive Bayes model, we can calculate the unequal cost using the Kernel filter as it returned the highest accuracy for this model. The Naive Bayes model returns fairly accurate estimates of the class posterior probabilities. We ran this with the ‘cost sensitive classifier’ meta-model and ‘Minimize Expected Cost’ set to true (so that the same model was trained and only the cost was evaluated). The resulting confusion matrix is shown below.
+
+│4109   16841│
+
+│1014    8036│
+
+This gives us a cost of (16841 × 1) + (1014 × 4) = 20,897.
+
+#### 4.2.2 K-Nearest-Neighbour (KNN)
+Since the KNN model is not as good as the Naive Bayes model in producing accurate probability
+values, we keep the ‘Minimize Expected Cost’ set to false. The KNN model used here is the the
+benchmark model which had only the ‘Remove’ filter applied, as this had the highest accuracy.
+The confusion matrix for this is shown below.
+
+│17006   3944│
+
+│3465    5585│
+
+This gives us a cost of (3944 × 1) + (3465 × 4) = 17, 804. This is much lower than the cost of
+the Naive Bayes Model.
+
+### 4.3 Model Selection
+From the results above, it is clear that the K-Nearest-Neighbour model is the most accurate model
+for the unequal cost model. It is important to note that in both cases for the unequal cost model,
+the same exact models from the equal cost scenario were used.
+
+Since the KNN model consistently gave us the higher accuracy and often the lowest computational
+complexity, we can argue that our approach has been thorough, and that these results are tangible.
+
+## 5 Final Performance
+Since the KNN model is better in all aspects than the Naive Bayes model, we can analyze the cost
+on the test set by using the same cost analysis method as above. The resulting confusion matrix
+is shown below.
+
+│2843   658│
+
+│574    925│
+
+This gives us a cost of (658×1) + (574×4) = 2, 954. Table 7 summarizes the results for both
+equal and unequal costs.
+
+|     Problem   | Final Model |   Training Set   |     Test Set     |
+|-----------------------------|------------------|------------------|
+|   Equal Cost  |     KNN     | Accuracy: 77.19% | Accuracy: 77.88% |  
+| Unequal Cost] |     KNN     |   Cost: 17,804   |   Cost: 2,954    |
+
+Table 7: Results for the cost scenarios.
+
+## 6 Conclusion
+The final chosen model was KNN due to its superior accuracy over the Naive Bayes model. Taking
+into consideration the large size of our data (30,000 entries), it is sensible to suggest that our
+findings are reliable and our results are definitive from a statistical standpoint.
+
+One way we could enhance our findings is to explore a variety of different models. Examples
+of some models include decision trees, Gaussian processes, linear regression, etc. However, on a
+dataset of 30,000 entries, an accuracy of 77.19%+, is one that is not only conclusive, but a result
+we can can be pleased with.
