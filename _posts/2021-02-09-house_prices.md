@@ -1,18 +1,13 @@
 ---
 title: "Kaggle House Prices Predictions Using Advanced Regression Techniques"
 categories:
+  - kaggle
+tags:
   - data science
   - machine learning
-  - predictive modelling
-tags:
-  - data
-  - scientist
-  - science
-  - analyst
   - python
-  - machine
-  - learning
   - regression
+  - predictive modelling
 ---
 
 In this post we will attempt to predict house prices Ames, Iowa, using 79 explanatory variables describing (almost) every aspect of residential homes.  
