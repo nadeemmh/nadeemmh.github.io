@@ -18,7 +18,7 @@ asked. The student number "160106794" has been used as the seed.
 ## 1 Erdös-Rényi Random Graphs
 We must generate a sequence of G(N, p) graphs which have p = 0.15 (constant) and different N values N = 10, 50, 100, 200, 500, 1000. Here, N is the number of nodes and p is the probability. These graphs are shown in Figures 1 - 6.
 
-![layers]<https://i.imgur.com/BSg76tm.png>
+![layers](https://i.imgur.com/BSg76tm.png
 
 Table 1 displays all the information in a presentable manner with values for the average clustering
 coefficient (C), average degree (k) and the values for (C)/(k). All values are given to an accuracy
@@ -52,13 +52,13 @@ the two lines are almost identical for higher values of N.
 
 Table 2: This table adds a new column for the values of f(N) = 1/N−1.
 
-![layers]<https://i.imgur.com/oUXUFI7.png>
+![layers](https://i.imgur.com/oUXUFI7.png)
 
 Now, we calculate the average distance in each one of the graphs, we are asked to plot this
 against the number of nodes of the graph. The results for this are shown in Table 3. Figure 9
 shows N plotted against the average distance.
 
-![layers]<https://i.imgur.com/PHDBFed.png>
+![layers](https://i.imgur.com/PHDBFed.png)
 
 |Nodes (N)|Average Distance|
 |10| 0|
@@ -77,6 +77,6 @@ N remaining the same. Then we can determine their degree distribution and plot t
 graphs and their plots are shown below with left being the graphs and the right being its degree
 distribution.
 
-![layers]<https://i.imgur.com/gPsX5EI.png>
-![layers]<https://i.imgur.com/BVaMzut.png>
+![layers](https://i.imgur.com/gPsX5EI.png)
+![layers](https://i.imgur.com/BVaMzut.png)
 
