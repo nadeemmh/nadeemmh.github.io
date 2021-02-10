@@ -1,5 +1,5 @@
 ---
-layout: archive
+layout: archive-uni
 permalink: /university/
 title: "University Projects"
 author: "Hamza Nadeem"
