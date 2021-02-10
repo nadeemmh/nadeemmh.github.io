@@ -61,7 +61,7 @@ apply the ‘Remove’ filter to the relevant attributes which we have discussed
 13, 56), and can then run each model and classifier using 10-fold cross-validation. This increases
 the reliability of the error estimate and will help with the accuracy of our overall results. In
 addition to this, for the KNN model, we must set ‘cross validate’ to true and the KNN value to
-10. This gives us the best value for K which in our case is K = 1. The benchmark results are
+'10'. This gives us the best value for K which in our case is K = 1. The benchmark results are
 shown in Table 1.
   
 |           Model            | Benchmark Results |
