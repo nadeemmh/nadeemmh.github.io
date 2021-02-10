@@ -1,16 +1,11 @@
 ---
 title: "Machine Learning Explained "
 categories:
-  - data science
-  - machine learning
+  - research
 tags:
-  - data
-  - scientist
-  - science
-  - analyst
-  - python
-  - machine
-  - learning
+  - machine learning
+  - theory
+  - educational
 ---
 
 This post explores machine learning and the different methods that are used to develop predictive models. We will understand what each of these methods are, what they do, their pros and cons, and what is the best application for them. 
