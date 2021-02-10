@@ -104,8 +104,8 @@ shows the average clustering coefficient for each probability. The values for ea
 its corresponding clustering coefficient is shown in Table 4.
 
 |Probability P<sub>d</sub>|Average Clustering Coefficient|
-|0.005| 0.5|
 |:---:|:---:|
+|0.005| 0.5|
 |0.01 |0.4887|
 |0.05| 0.4203|
 |0.1 |0.3637|
@@ -122,3 +122,27 @@ that as the probability increases, the average distance decreases exponentially 
 transition. This verifies our intuition, since we know that as the probability of nodes being
 connected increases, the average distance between nodes in the network should be lower.
 
+|Probability P<sub>d</sub>|Average Clustering Coefficient|
+|:---:|:---:|
+|0.005| 25.3769|
+|0.01| 17.9267|
+|0.05| 7.0483|
+|0.1| 5.8737|
+|0.5| 4.1987|
+|1.0| 3.9594|
+
+![layers](https://i.imgur.com/lqdAeYS.png)
+
+## 3 The Barabasi-Albert (BA) Model
+We now use the Barabasi-Albert (BA) Model. We generate a graph with N=100
+nodes using the BA model with m = 2 and starting with 2 connected nodes. A visualization of
+the adjacency matrix is shown in Figure 28. This visualization shows black dot as linked nodes
+and the blank area as unlinked nodes.
+
+![layers](https://i.imgur.com/oJMwpXE.png)
+
+Here, we use the KL algorithm to partition this graph into two sets of 50 nodes each. A graph
+showing the cut size value at each accepted node exchange is shown in Figure 29. The number of
+node swaps stop at the 17th value because the cut size repeats the same value after this for the
+rest of the output. As a result of this repetition, we can conclude that the minimum cut found
+was of size 53.
