@@ -61,6 +61,7 @@ shows N plotted against the average distance.
 ![layers](https://i.imgur.com/PHDBFed.png)
 
 |Nodes (N)|Average Distance|
+|:---:|:---:|
 |10| 0|
 |50 |2.1608|
 |100| 1.9497|
@@ -79,4 +80,45 @@ distribution.
 
 ![layers](https://i.imgur.com/gPsX5EI.png)
 ![layers](https://i.imgur.com/BVaMzut.png)
+
+## 2 The Watts-Strogatz (WS) Model
+Here, we use the Watts-Strogatz (WS) Model. First, we must create an undirected
+graph, G, with 100 nodes arranged in a circle formation where p = 0. The visualization of this
+graph’s adjacency matrix is shown in Figure 22, where black represents a link and white represents
+no links.
+
+![layers](https://i.imgur.com/kaVCGAG.png)
+
+Next, we generate a second graph, G'', with p = 0.3. The visualization of this graph’s adjacency
+matrix is shown in Figure 23.
+
+![layers](https://i.imgur.com/sZvSY9B.png)
+
+The degree distribution for G and G'' can be seen in the Figure 24 and Figure 25 respectively.
+The degree distribution tells us that the average degree for G = 6 and G'' = 6.
+
+![layers](https://i.imgur.com/qLPbnTR.png)
+
+Next, we work with varying probability pd = 0.005, 0.01, 0.05, 0.1, 0.5, 1.0. The graph in Figure
+shows the average clustering coefficient for each probability. The values for each probability and
+its corresponding clustering coefficient is shown in Table 4.
+
+|Probability P<sub>d</sub>|Average Clustering Coefficient|
+|0.005| 0.5|
+|:---:|:---:|
+|0.01 |0.4887|
+|0.05| 0.4203|
+|0.1 |0.3637|
+|0.5 |0.0688|
+|1.0 |0.0089|
+
+Table 4
+
+![layers](https://i.imgur.com/KNVKkRF.png)
+
+Now, we use the same model to calculate and plot the average distance relative to its probability.
+The plot is given in Figure 27 and its corresponding table is Table 5. From the table, it is clear
+that as the probability increases, the average distance decreases exponentially and is a smooth
+transition. This verifies our intuition, since we know that as the probability of nodes being
+connected increases, the average distance between nodes in the network should be lower.
 
