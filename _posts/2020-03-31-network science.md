@@ -1,5 +1,5 @@
 ---
-title: "University: Network Science Project"
+title: "Network Science Project"
 categories:
   - university
 tags:
