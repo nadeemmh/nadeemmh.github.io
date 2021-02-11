@@ -1,5 +1,5 @@
 ---
-title: "University: Machine Learning Project"
+title: "Machine Learning Project"
 categories:
   - university
 tags:
