@@ -20,20 +20,13 @@ K-fold cross-validation is a technique for assessing how a model generalises to 
 The procedure has a single parameter “k” that refers to the number of groups that a data sample will be split up into. When a specific value for k is chosen, the procedure becomes k-fold cross-validation, for example, k=10 become 10-fold cross-validation.
 
 The general process goes as follows: 
-  1.	Randomise the dataset.
-  
-  2.	Split the data set into k groups.
-  
-  3.	For each unique group:
-  
+  1.	Randomise the dataset.  
+  2.	Split the data set into k groups.  
+  3.	For each unique group:  
       1.	Take the group as a hold out or test data set.
-      
       2.	Take the remaining groups as a training data set.
-      
       3.	Fit a model on the training set and evaluate it on the test set.
-      
-      4.	Retain the evaluation score and discard the model.
-  
+      4.	Retain the evaluation score and discard the model.  
   4.	Evaluate the skill of each model using the sample of model evaluation scores.
   
 After this is done, the best performing model is chosen for model optimisation for the final predictions.
