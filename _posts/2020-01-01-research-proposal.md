@@ -86,8 +86,8 @@ A Markov chain is a stochastic model describing a sequence of possible events
 in which the probability of each event depends only on the state attained in the
 previous event, Oxford (2020).
 
-This can be used for a stochastic process x = x1, x2, ..., xi􀀀1, xi, where the probability of each
-step xi only depends on the value of the preceding step xi􀀀1, and not the entire sequence.
+This can be used for a stochastic process x = x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>i-1</sub>, x<sub>i</sub>, where the probability of each
+step x<sub>i</sub> only depends on the value of the preceding step x<sub>i-1</sub>, and not the entire sequence.
 
 ![layers](https://i.imgur.com/e53voTZ.png)
 
