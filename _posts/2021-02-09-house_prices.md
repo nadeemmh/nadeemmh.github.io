@@ -606,4 +606,12 @@ Table of the model attempts and their respective scores:
 The final score of **0.13411** places me at rank 1833 of 5339, which is approximately top 34% of all submissions.
 
 ## 7) Conclusion
-Coming Soon
+On the first attempt, XGBoost was used, as it was the best performing model from the baseline testing results. The model was optimised from the one used in testing by defining the evaluation metrics for validation data and the learning rate of the model. The score (0.14349) obtained from this was admissable, but it was clear that there was room for improvement. 
+
+On the second attempt, other models that gave good baseline testing results, similar to the XGBoost model were optimized and used, but none of them returned a better score than the first attempt. From these models, RidgeCV scored the highest (0.15328) which was still much lower than the first attempt and was therefore not admissable. This meant that XGBoost was the best model from the ones tested (as the baseline model testing had suggested), and it needed to be properly optimized. 
+
+On attempt 3, the parameters associated to XGBoost were tweaked, particularly the learning rate parameter (eta). This resulted in a better score (0.13986) and confirmed that parameter optimisatio was the key to a higher accuracy and ultimately a better score. With this new-found knowledge, the optimisation continued.
+
+On attempt 4, the final attempt, the XGBoost model was heavily refined and many new parameters were optimised, particularly the tree-specific paramters. These include maximum depth, minimum child weight, solumn sample by tree. This returned a much higher score (0.13411) which gave an increase of 1263 total positions from the first attempt, and was in the top 34% of all submissions. 
+
+After attempt 4, parameter optimisation was attempted with new and different parameters, but the score did not improve, so the score from attempt 4 was used as the final score. To make any improvements to the score, the model would need to be changed to a better performing model (reiterate from model building step onwards) which would be too time consuming. Deep learning models or better machine learning models could be used to improve the predictions, but research would be required to figure this out. 
