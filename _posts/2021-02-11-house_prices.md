@@ -210,7 +210,7 @@ fill_null_test('BsmtFinType2', 'mode')
 Here, we fill missing values for features that are only in train.
 
 ``` r
-# fill missing values using the mode for only train
+# fill missing values\ using the mode for only train
 fill_null_train('Electrical', 'mode')
 ```
 
@@ -426,7 +426,7 @@ mean_lso = round(cv.mean(), 4)
 The table above shows the average results (accuracy) for each model which gives us an idea of which model would be optimal for our case.
 
 ## 5) Model Optimisation
-From the baseline models, it is clear that the Extreme Gradient Bossting model performed the best out of the group in the 5-fold cross validation test. We can now optimise this model to try and predict the data.
+From the baseline models, it is clear that the Extreme Gradient Boosting model performed the best out of the group in the 5-fold cross validation test. We can now optimise this model to try and predict the data.
 
 ### Attempt 1: XGBoost
 On the first attempt, I have used the XGBoost model with the parameters shown below. 
@@ -577,7 +577,7 @@ print(y_test)
 ```
 > ![layers](https://i.imgur.com/i4KDKwx.png)
 
-The score for this attemt was **0.13986**
+The score for this attempt was **0.13986**
 
 This attempt has been the best one so far and places me at rank 2338 (up by 758 positions).
 
@@ -589,7 +589,7 @@ print(y_test)
 ```
 > ![layers](https://i.imgur.com/CwDgKvz.png)
 
-The score for this attemt was **0.13411**
+The score for this attempt was **0.13411**
 
 This attempt has given the best score and places me at rank 1833 (up by 505 positions).
 
