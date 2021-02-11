@@ -603,7 +603,7 @@ Table of the model attempts and their respective scores:
 |   XGB (Tuned)   | 0.13986 |
 | XGB (Tuned -v2) | 0.13411 |
 
-The final score of **0.13411** places me at rank 1833 of 5339, which is approximately top 34% of all submissions.
+The final score of **0.13411** places me at rank 1833 of 5339 (at the time of submission), which is approximately top 34% of all submissions.
 
 ## 7) Conclusion
 On the first attempt, XGBoost was used, as it was the best performing model from the baseline testing results. The model was optimised from the one used in testing by defining the evaluation metrics for validation data and the learning rate of the model. The score (0.14349) obtained from this was admissable, but it was clear that there was room for improvement. 
