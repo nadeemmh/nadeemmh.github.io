@@ -21,12 +21,19 @@ The procedure has a single parameter “k” that refers to the number of groups
 
 The general process goes as follows: 
   1.	Randomise the dataset.
+  
   2.	Split the data set into k groups.
+  
   3.	For each unique group:
+  
       1.	Take the group as a hold out or test data set.
+      
       2.	Take the remaining groups as a training data set.
+      
       3.	Fit a model on the training set and evaluate it on the test set.
+      
       4.	Retain the evaluation score and discard the model.
+  
   4.	Evaluate the skill of each model using the sample of model evaluation scores.
   
 After this is done, the best performing model is chosen for model optimisation for the final predictions.
@@ -45,6 +52,8 @@ After each iteration, the output is compared with the expected results, assess t
 ## Best Model Optimisation Techniques in Machine Learning 
 ### Gradient descent 
 Gradient descent is one of the most common model algorithms for minimising error. The idea of this method is to iterate over the training dataset while updating the model. With every update, this method guides the model to find the target and gradually converge to the optimal value of the objective function.
+
+![layers](https://lh3.googleusercontent.com/YWGY5PRhm3cEO7gjlt4EYQn3rrgB1ii8mnnO7G5GJ9V8nVZkOXWEafXMYTc3NNNYeZJTEuu4Zcg1cCck8gHS6W-TlcrlPI0vFrQ_XLYGB5oLddUCAgYYvCh4HNN74ixK-WTqdyK6)
 
 ### Adaptive Learning Rate Method
 Learning rate is one of the key hyperparameters that undergo optimisation. Learning rate decides whether the model will skip certain segments of the data. If the learning rate is too high, then the model might miss on subtler aspects of the data. Alternatively, if the learning rate is too low, then the model will take significantly longer to train as it makes very tiny updates to the weights in the model.
