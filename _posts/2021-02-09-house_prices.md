@@ -467,6 +467,32 @@ rdg_model.alpha_
 y_test = rdg_model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
 
+## Attempt 3
+``` r 
+from sklearn.metrics import mean_squared_error
+from xgboost import XGBRegressor
+
+# Hyperparameters
+params = {
+    'objective': 'reg:squarederror', # MSE as loss function
+    'eval_metric': 'rmse', # RMSE as metric
+    'eta': 0.09, # Learning rate
+}
+
+# model
+model = XGBRegressor(**params)
+
+# Fit the model to the data
+model.fit(X_train, y_train)
+```
+
+> ![layers](https://i.imgur.com/CoFVFEP.png)
+
+```r
+# Predictions
+y_test = model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
+```
+
 ### Submitting
 ```r
 submission = pd.DataFrame({'Id':df_test.Id,'SalePrice':y_test})
@@ -506,13 +532,26 @@ The score for this attempt was: **0.15328**.
 
 This attempt was clearly inferior to the first attempt, which means that the Extreme Gradient Boosting model is still the best one so far.
 
+### Attempt 3:
+This is the result of the third attempt:
+
+``` r
+print(y_test)
+```
+> ![layers](https://i.imgur.com/i4KDKwx.png)
+
+The score for this attemt was **0.13986**
+
+This attempt has been the best one so far and places me at rank 2338 (up by 758 positions).
+
+
 Table of the model attempts and their respective scores: 
 
-|  Model  |  Score  |
-|---------|---------|
-|   XGB   | 0.14349 |
-| RidgeCV | 0.15328 |
-|         |         |
+|    Model    |  Score  |
+|-------------|---------|
+|     XGB     | 0.14349 |
+|   RidgeCV   | 0.15328 |
+| XGB (Tuned) | 0.13986 |
 
 ## 7) Conclusion
 Coming Soon
