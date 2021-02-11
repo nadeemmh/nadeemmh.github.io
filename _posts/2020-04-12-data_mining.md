@@ -1,5 +1,5 @@
 ---
-title: "University: CS3440 - Data Mining"
+title: "Data Mining Project"
 categories:
   - university
 tags:
