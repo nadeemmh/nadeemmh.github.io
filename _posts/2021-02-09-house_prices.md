@@ -1,5 +1,5 @@
 ---
-title: "Kaggle House Prices Predictions Using Advanced Regression Techniques"
+title: "Kaggle: House Prices Predictions Using Advanced Regression Techniques"
 categories:
   - kaggle
 tags:
