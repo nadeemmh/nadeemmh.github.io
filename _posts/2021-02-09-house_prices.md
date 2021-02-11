@@ -428,7 +428,8 @@ The table above shows the average results (accuracy) for each model which gives 
 ## 5) Model Optimisation
 From the baseline models, it is clear that the Extreme Gradient Bossting model performed the best out of the group in the 5-fold cross validation test. We can now optimise this model to try and predict the data.
 
-### Attempt 1:
+### Attempt 1: XGBoost
+On the first attempt, I have used the XGBoost model with the parameters shown below. 
 
 ``` r 
 from sklearn.metrics import mean_squared_error
@@ -454,7 +455,9 @@ model.fit(X_train, y_train)
 y_test = model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
 
-### Attempt 2:
+### Attempt 2: RidgeCV
+For the second attempt, I have used the RidgeCV model with the parameters shown below.
+
 ```r
 rdg = RidgeCV(alphas=(0.01, 0.05, 0.1, 0.2, 0.3, 0.35, 0.39, 0.4, 0.41, 0.45, 0.5, 1, 3, 5, 10), normalize=True)
 rdg_model = rdg.fit(X_train, y_train)
@@ -467,7 +470,9 @@ rdg_model.alpha_
 y_test = rdg_model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
 
-## Attempt 3:
+## Attempt 3: XGBoost (Tuned)
+Here, I have used the  XGBoost model again with some better hyperparameter tuning.
+
 ``` r 
 from sklearn.metrics import mean_squared_error
 from xgboost import XGBRegressor
@@ -493,7 +498,9 @@ model.fit(X_train, y_train)
 y_test = model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
 
-## Attempt 4:
+## Attempt 4: XGBoost (Tuned -Version2)
+Finally I have used the XGBoost model as my submitted model with more complex hyperparameter tuning that fits the data much better.
+
 ``` r 
 from sklearn.metrics import mean_squared_error
 from xgboost import XGBRegressor
@@ -534,9 +541,9 @@ print('Submitted!')
 > Submitted!
 
 ## 6) Results
-These are the final results for the predictions.
+These are the final results for all the different attempt and their respective scores.
 
-### Attempt 1:
+### Attempt 1: XGBoost
 This is the result of the first attempt:
 
 ``` r
@@ -550,7 +557,7 @@ The lower the score, the better the accuracy of the model.
 
 This score placed me at rank 2580 which is roughly in the middle (5158 total at the time). There is room for improvement. 
 
-### Attempt 2:
+### Attempt 2: RidgeCV
 This is the result of the second attempt:
 
 ``` r
@@ -562,7 +569,7 @@ The score for this attempt was: **0.15328**.
 
 This attempt was clearly inferior to the first attempt, which means that the Extreme Gradient Boosting model is still the best one so far.
 
-### Attempt 3:
+### Attempt 3: XGBoost (Tuned)
 This is the result of the third attempt:
 
 ``` r
@@ -574,7 +581,7 @@ The score for this attemt was **0.13986**
 
 This attempt has been the best one so far and places me at rank 2338 (up by 758 positions).
 
-### Attempt 4:
+### Attempt 4: XGBoost (Tuned -Version2)
 This is the result of the fourth and final attempt:
 
 ``` r
@@ -589,12 +596,12 @@ This attempt has given the best score and places me at rank 1833 (up by 505 posi
 
 Table of the model attempts and their respective scores: 
 
-|      Model     |  Score  |
-|----------------|---------|
-|       XGB      | 0.14349 |
-|     RidgeCV    | 0.15328 |
-|   XGB (Tuned)  | 0.13986 |
-| XGB (Tuned v2) | 0.13411 |
+|      Model      |  Score  |
+|-----------------|---------|
+|       XGB       | 0.14349 |
+|     RidgeCV     | 0.15328 |
+|   XGB (Tuned)   | 0.13986 |
+| XGB (Tuned -v2) | 0.13411 |
 
 The final score of **0.13411** places me at rank 1833 of 5339, which is approximately top 34% of all submissions.
 
