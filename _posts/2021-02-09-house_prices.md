@@ -454,7 +454,7 @@ model.fit(X_train, y_train)
 y_test = model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
 
-### Attempt 2
+### Attempt 2:
 ```r
 rdg = RidgeCV(alphas=(0.01, 0.05, 0.1, 0.2, 0.3, 0.35, 0.39, 0.4, 0.41, 0.45, 0.5, 1, 3, 5, 10), normalize=True)
 rdg_model = rdg.fit(X_train, y_train)
@@ -467,7 +467,7 @@ rdg_model.alpha_
 y_test = rdg_model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
 
-## Attempt 3
+## Attempt 3:
 ``` r 
 from sklearn.metrics import mean_squared_error
 from xgboost import XGBRegressor
@@ -492,6 +492,36 @@ model.fit(X_train, y_train)
 # Predictions
 y_test = model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
 ```
+
+## Attempt 4:
+``` r 
+from sklearn.metrics import mean_squared_error
+from xgboost import XGBRegressor
+
+# Hyperparameters
+params = {
+    'objective': 'reg:squarederror', # MSE as loss function
+    'eval_metric': 'rmse', # RMSE as metric
+    'eta': 0.09, # Learning rate
+    'max_depth': 5,
+    'min_child_weight':4,
+    'colsample_bytree':0.9,
+}
+
+# model
+model = XGBRegressor(**params)
+
+# Fit the model to the data
+model.fit(X_train, y_train)
+```
+
+> ![layers](https://i.imgur.com/x39jdO2.png)
+
+```r
+# Predictions
+y_test = model.predict(df_Test.drop(['SalePrice'], axis = 1).values)
+```
+
 
 ### Submitting
 ```r
@@ -518,7 +548,7 @@ The score for this attempt was: **0.14349**.
 
 The lower the score, the better the accuracy of the model.
 
-This score placed me at rank 2580 which is roughly in the middle (5158 total). There is room for improvement. 
+This score placed me at rank 2580 which is roughly in the middle (5158 total at the time). There is room for improvement. 
 
 ### Attempt 2:
 This is the result of the second attempt:
@@ -544,14 +574,29 @@ The score for this attemt was **0.13986**
 
 This attempt has been the best one so far and places me at rank 2338 (up by 758 positions).
 
+### Attempt 4:
+This is the result of the fourth and final attempt:
+
+``` r
+print(y_test)
+```
+> ![layers](https://i.imgur.com/CwDgKvz.png)
+
+The score for this attemt was **0.13411**
+
+This attempt has given the best score and places me at rank 1833 (up by 505 positions).
+
 
 Table of the model attempts and their respective scores: 
 
-|    Model    |  Score  |
-|-------------|---------|
-|     XGB     | 0.14349 |
-|   RidgeCV   | 0.15328 |
-| XGB (Tuned) | 0.13986 |
+|      Model     |  Score  |
+|----------------|---------|
+|       XGB      | 0.14349 |
+|     RidgeCV    | 0.15328 |
+|   XGB (Tuned)  | 0.13986 |
+| XGB (Tuned v2) | 0.13411 |
+
+The final score of **0.13411** places me at rank 1833 of 5339, which is approximately top 34% of all submissions.
 
 ## 7) Conclusion
 Coming Soon
