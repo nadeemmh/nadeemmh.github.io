@@ -26,7 +26,7 @@ Regression is typically the next step up after correlation and understanding the
 ### Linear Regression
 Linear regression finds a line that best fits the data as shown in the image below. Extensions of linear regression include multiple linear regression and polynomial regression.
 
-![layers](https://miro.medium.com/max/2400/1*sOi6uKo3d-OxmA1caVmm0g.png)
+![](https://miro.medium.com/max/2400/1*sOi6uKo3d-OxmA1caVmm0g.png?s=100)
 
 #### Decision Tree
 Decision trees are popular models used in research, planning and mahcine learning. each decision is called a **node**, and the more nodes there are, the more accurate the decision tree will be (generally). The last nodes of the decision tree, where a decision is made, are called the leaves of the tree. Decision trees are intuitive and easy to build but fall short when it comes to accuracy.
