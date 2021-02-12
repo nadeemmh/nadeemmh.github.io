@@ -113,3 +113,6 @@ Principal component analysis (or PCA for short) is a popular dimensionality redu
     3. Eigenvectors and eigenvalues are computed from the covariance matrix in other to determine the principal components of the data. **Principal components are new variables that are constructed as linear combinations or mixture of the initial variables.** These combinations are done in such a way that the new variables (i.e., principal components) are uncorrelated and most of the information within the initial variables is squeezed or compressed into the first components.
 
 <img src="https://builtin.com/sites/default/files/styles/ckeditor_optimize/public/inline-images/Principal%20Component%20Analysis%20Principal%20Components.png" width="600">
+
+# Conclusion
+There is clearly a ton of complexity when focusing on any particular model, but this post should provide a fundamental understanding of how each machine learning algorithm works and the possible use cases for it.
