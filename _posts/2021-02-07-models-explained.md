@@ -43,7 +43,10 @@ In the example abode, if a single decision tree was created (third one), it woul
 
 #### Neural Network
 
-A neural network is essentially a network of mathematical equations. It takes one or more input variables and results in one or more output variables by going thorugh the entire network of equations. [This post](https://hxmza.me/research/deep_learning/){:target="_blank"} explains neural networks used in deep learning and how they are structured. 
+A neural network is essentially a network of mathematical equations. It takes one or more input variables and results in one or more output variables by going thorugh the entire network of equations. [This post](https://hxmza.me/research/deep_learning/) explains neural networks used in deep learning and how they are structured. 
+
+<a href="https://hxmza.me/research/deep_learning/" target="_blank">This post</a>
+
 
 ### Classification
 Classification is another type of supervised learning method in which the output is discrete (and finite). Classification is a process of categorising a given set of data into classes. The process starts with predicting the class of given data points. The classes are often referred to as target, label or categories. Below are some of the most common types of classification models.
