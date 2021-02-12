@@ -51,7 +51,7 @@ Classification is another type of supervised learning method in which the output
 ### Logistic Regression
 Logistic regression is similar to linear regression but is used to model the probability of a finite number of outcomes, typically two. There are many reasons why logistic regression is used over linear regression when modelling probabilities of outcomes, which include non-negative values, better results (unbiased), and lower variances. To summarise, a logistic equation is created in such  a way that the outpt values can only be between 0 and 1.
 
-<img src="https://miro.medium.com/max/2400/1*USrdZ1puaFIIymBRcO51mg.png" width="600">
+<img src="https://miro.medium.com/max/2400/1*USrdZ1puaFIIymBRcO51mg.png" width="500">
 
 The above image shows typical logistic regression, which is clearly between 0 and 1.
 
@@ -102,3 +102,14 @@ Heirarchical clusering is an algorithm similar to the K-means, but outputs struc
 Density-based clustering is a clustering method that identifies distinctive groups/clusters in the data by detecting areas where points are concentrated (high density) and where they are separated by areas that are empty (low density).
 
 ![layers](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-A06A412D-2F4F-4D35-8FFF-1F4B3B3A8F16-web.png)
+
+## Dimensionality Reduction
+Dimensionality reduction is the process of reducting the number of random variables (features) under consideration by obtaining a set of principle variables. In simpler terms, it is the process of reducting the dimension of the feature set, or just reducing the number of features. Most dimensionality reduction techniques can be categorised as either **feature elimination** (removing a feature) or **feature extraction** (identifying important features). 
+
+### Principal Component Analysis (PCA) 
+Principal component analysis (or PCA for short) is a popular dimensionality reduction method. PCA is a statistical procedure that allows the summarisation of information content in large data tables by means of a smaller set of "summary indices" that can be visualised/analysed more easily. A simple example is projecting higher dimensional data (e.g. 3 dimensions) to a smaller space (2 dimensions). This results in lower dimension of data (2 dimensions instead of 3 dimensions) while keeping all original variables in the model. the method goes as follows: 
+    1. The aim is to standardise the range of the continuous variables so that each one of them contributes equally to the analysis. Once this is done, all the variables will be transformed to the same scale.
+    2. Understand how the variables of the input data set are varying from the mean with respect to each other (look for any relationships between the variables). This is important because variables can be highly correlated in such a way that they contain redundant information. In order to identify these correlations, the covariance matrix can be computed. If the sigh of the covariance is positive, the two variables increase or decrease together (correlated), whereas, if the sign is negative, then one variable increases as the other decreases (inversely correlated).
+    3. Eigenvectors and eigenvalues are computed from the covariance matrix in other to determine the principal components of the data. **Principal components are new variables that are constructed as linear combinations or mixture of the initial variables.** These combinations are done in such a way that the new variables (i.e., principal components) are uncorrelated and most of the information within the initial variables is squeezed or compressed into the first components.
+
+<img src="https://builtin.com/sites/default/files/styles/ckeditor_optimize/public/inline-images/Principal%20Component%20Analysis%20Principal%20Components.png" width="600">
