@@ -55,12 +55,7 @@ In gradient descent, steps must be the same size. If the chosen learning rate is
 ### Adaptive Learning Rate Method
 Learning rate is one of the key hyperparameters that undergo optimisation. Learning rate decides whether the model will skip certain segments of the data. If the learning rate is too high, then the model might miss on subtler aspects of the data. Alternatively, if the learning rate is too low, then the model will take significantly longer to train as it makes very tiny updates to the weights in the model.
 
-This method is widely used in Deep Neural Networks (DNN) where methods like RMSProp, Adam, use the exponential averaging to provide effective updates and simplify the calculation (detailed below). 
-  -	Adagrad: 
-  -	RMSProp: adjusts the Adagrad method such that it reduces its monotonically decreasing learning rate.
-  -	Adam: almost the same as RMSProp but with momentum.
-
-Since training requires so much computing power to train deep learning models, it is important to use efficient algorithms. Stochastic gradient descent with momentum, RMSProp, and Adam Optimiser are algorithms that are created specifically for deep learning optimisation (as mentioned above).
+This method is widely used in Deep Neural Networks (DNN) where methods like RMSProp, Adam, use the exponential averaging to provide effective updates and simplify the calculation. Since training requires so much computing power to train deep learning models, it is important to use efficient algorithms. Stochastic gradient descent with momentum, RMSProp, and Adam Optimiser are algorithms (amongst others) that are created specifically for deep learning optimisation .
 
 ### Stochastic Gradient Descent with Momentum
 Stochastic gradient descent refers to a few samples are selected randomly instead of the whole data set for each iteration and calculating the update immediately (unlike the regular gradient decent). Suppose there are a million samples in the dataset. A typical Gradient Descent optimization technique, will use all of the samples for completing one iteration while performing the Gradient Descent, and it has to be done for every iteration until the minima is reached. Hence, it becomes computationally very expensive to perform.
@@ -70,7 +65,7 @@ Stochastic gradient descent solves this problem by using only a single sample, i
 Even though it requires a higher number of iterations to reach the minima than typical Gradient Descent (due to noise), it is still computationally much less expensive than typical Gradient Descent. Hence, in most scenarios, SGD is preferred over Batch Gradient Descent for optimizing a learning algorithm.
 
 ### RMSProp 
-RMSProp adjusts the weights where a high gradient will have low learning rate and vice versa, such that it reduces its monotonically decreasing learning rate. It is useful to normalize the gradient itself because it balances out the step size. It can even work with the smallest batches.
+RMSProp is a deep learning opimisation algorithm that adjusts the weights where a high gradient will have low learning rate and vice versa, such that it reduces its monotonically decreasing learning rate. It is useful to normalize the gradient itself because it balances out the step size. It can even work with the smallest batches.
 
-### Adam Optimizer
-Almost the same as the RMSProp algorithm but with momentum. Adam Optimizer can handle the noise problem and even works with large datasets and parameters.
+### Adam Optimiser
+The Adam Optimser is also a deep learning algorithm that is almost the same as the RMSProp algorithm but with momentum. Adam Optimizer can handle the noise problem and even works with large datasets and parameters.
