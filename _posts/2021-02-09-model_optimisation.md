@@ -12,7 +12,7 @@ This post explains how machine learning models are optimised and different ways 
 
 The objective of machine learning is to create a model that performs well and gives accurate predictions for a given data set. In order to make accurate predictions, we must optimise the model to suit our needs and train the data correctly. This process is called model optimisation. 
 
-Machine learning optimisation is the process of adjusting the hyperparameters in order to minimize the cost function by using the optimization techniques. It is important to minimise the cost function because it describes the discrepancy between the true value of the estimated parameter and what the model has predicted (minimising the error).
+Machine learning optimisation is the process of adjusting the hyperparameters in order to minimise the cost function by using the optimisation techniques. It is important to minimise the cost function because it describes the discrepancy between the true value of the estimated parameter and what the model has predicted (minimising the error).
 
 ## K-Fold Cross-Validation
 K-fold cross-validation is a technique for assessing how a model generalises to an independent data set.  It is primarily used in machine learning to estimate the proficiency of a model on unseen data. It uses a limited sample in order to estimate how the model is expected to perform in general when used to make predictions on data not used during the training of the model.
@@ -48,7 +48,7 @@ Gradient descent is one of the most common model algorithms for minimising error
 
 <div style="text-align:center"><img src="https://lh3.googleusercontent.com/YWGY5PRhm3cEO7gjlt4EYQn3rrgB1ii8mnnO7G5GJ9V8nVZkOXWEafXMYTc3NNNYeZJTEuu4Zcg1cCck8gHS6W-TlcrlPI0vFrQ_XLYGB5oLddUCAgYYvCh4HNN74ixK-WTqdyK6" width="750" /></div>
 
-The graph above represents how the gradient descent algorithm travels in the variable space. To get started, take a random point on the graph and arbitrarily choose a direction. If the error is getting larger, then the direction is wrong and must it must be in the opposite direction. When the error stops decreasing, the optimization is over and you have found a local minimum.
+The graph above represents how the gradient descent algorithm travels in the variable space. To get started, take a random point on the graph and arbitrarily choose a direction. If the error is getting larger, then the direction is wrong and must it must be in the opposite direction. When the error stops decreasing, the optimisation is complete and a local minimum (for the error) has been found.
 
 In gradient descent, steps must be the same size. If the chosen learning rate is too large, the algorithm will jump around without getting closer to the right answer. If it’s too small, the computation will start mimicking exhaustive search take (brute-force search where the most optimal hyperparameters are determined by checking whether each candidate is a good match), which is, of course, inefficient.
 
