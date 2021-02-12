@@ -48,6 +48,10 @@ Gradient descent is one of the most common model algorithms for minimising error
 
 <div style="text-align:center"><img src="https://lh3.googleusercontent.com/YWGY5PRhm3cEO7gjlt4EYQn3rrgB1ii8mnnO7G5GJ9V8nVZkOXWEafXMYTc3NNNYeZJTEuu4Zcg1cCck8gHS6W-TlcrlPI0vFrQ_XLYGB5oLddUCAgYYvCh4HNN74ixK-WTqdyK6" width="750" /></div>
 
+The graph above represents how the gradient descent algorithm travels in the variable space. To get started, take a random point on the graph and arbitrarily choose a direction. If the error is getting larger, then the direction is wrong and must it must be in the opposite direction. When the error stops decreasing, the optimization is over and you have found a local minimum.
+
+In gradient descent, steps must be the same size. If the chosen learning rate is too large, the algorithm will jump around without getting closer to the right answer. If it’s too small, the computation will start mimicking exhaustive search take (brute-force search where the most optimal hyperparameters are determined by checking whether each candidate is a good match), which is, of course, inefficient.
+
 ### Adaptive Learning Rate Method
 Learning rate is one of the key hyperparameters that undergo optimisation. Learning rate decides whether the model will skip certain segments of the data. If the learning rate is too high, then the model might miss on subtler aspects of the data. Alternatively, if the learning rate is too low, then the model will take significantly longer to train as it makes very tiny updates to the weights in the model.
 
