@@ -26,12 +26,12 @@ Regression is typically the next step up after correlation and understanding the
 ### Linear Regression
 Linear regression finds a line that best fits the data as shown in the image below. Extensions of linear regression include multiple linear regression and polynomial regression.
 
-![](https://miro.medium.com/max/2400/1*sOi6uKo3d-OxmA1caVmm0g.png?s=100)
+<img src="https://miro.medium.com/max/2400/1*sOi6uKo3d-OxmA1caVmm0g.png" width="600">
 
 #### Decision Tree
 Decision trees are popular models used in research, planning and mahcine learning. each decision is called a **node**, and the more nodes there are, the more accurate the decision tree will be (generally). The last nodes of the decision tree, where a decision is made, are called the leaves of the tree. Decision trees are intuitive and easy to build but fall short when it comes to accuracy.
 
-![layers](https://miro.medium.com/max/2400/1*L9AcBn8WmWN44s-NQiDbOQ.png)
+<img src="https://miro.medium.com/max/2400/1*L9AcBn8WmWN44s-NQiDbOQ.png" width="600">
 In the image above, each box is a node and te final set of boxes are the leaves.
 
 ### Random Forest
@@ -51,7 +51,7 @@ Classification is another type of supervised learning method in which the output
 ### Logistic Regression
 Logistic regression is similar to linear regression but is used to model the probability of a finite number of outcomes, typically two. There are many reasons why logistic regression is used over linear regression when modelling probabilities of outcomes, which include non-negative values, better results (unbiased), and lower variances. To summarise, a logistic equation is created in such  a way that the outpt values can only be between 0 and 1.
 
-![layers](https://miro.medium.com/max/2400/1*USrdZ1puaFIIymBRcO51mg.png)
+<img src="https://miro.medium.com/max/2400/1*USrdZ1puaFIIymBRcO51mg.png" width="600">
 
 The above image shows typical logistic regression, which is clearly between 0 and 1.
 
@@ -89,7 +89,7 @@ K-means finds groups in data, with the number of groups represented by the varia
   2. Labels for training data (each dta point is assigned to a single cluster).
 Clustering allows for analysis of groups that have formed organically, rather than defining groups before looking at the data. Each centroid of a cluster is a collection of feature values which define the resulting groups. Examining the centroid feature weights can be used to qualitatively interpret what kind of group each cluster represents.
 
-![layers](https://miro.medium.com/max/1050/1*tWaaZX75oumVwBMcKN-eHA.png)
+<img src="https://miro.medium.com/max/1050/1*tWaaZX75oumVwBMcKN-eHA.png" width="600">
 
 The image above shows how K-means finds clusters in data.
 
