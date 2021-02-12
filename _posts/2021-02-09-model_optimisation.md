@@ -72,5 +72,5 @@ Even though it requires a higher number of iterations to reach the minima than t
 ### RMSProp 
 RMSProp adjusts the weights where a high gradient will have low learning rate and vice versa, such that it reduces its monotonically decreasing learning rate. It is useful to normalize the gradient itself because it balances out the step size. It can even work with the smallest batches.
 
-## Adam Optimizer
+### Adam Optimizer
 Almost the same as the RMSProp algorithm but with momentum. Adam Optimizer can handle the noise problem and even works with large datasets and parameters.
