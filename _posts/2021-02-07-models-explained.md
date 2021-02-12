@@ -10,7 +10,7 @@ tags:
 
 This post explores different types of machine learning models used for different types of cases and the majority of common machine learning models used in practice. 
 
-The [Machine Learning Explained: Introduction](https://hxmza.me/research/machine-learning-explained/){:target="_blank"} post explains the two main types of machine learning. All machine learning models are categorised as either supervised or unsupervised. 
+The [Machine Learning Explained: Introduction](https://hxmza.me/research/machine-learning-explained/) post explains the two main types of machine learning. All machine learning models are categorised as either supervised or unsupervised. 
 
 # Supervised Learning Models
 Supervised learning involves learning a function that maps an input to an output based on example input-output pairs. For example, if a dataset had two variables, age (input) and height (output), a supervised learning model could be implemented to predict the height of a person based on their age. An intelligent correlation analysis can lead to a greater understanding of the data. It is useful to use correlation alongside regression as it can more easily present the relationship between two varibles. 
@@ -49,4 +49,56 @@ A neural network is essentially a network of mathematical equations. It takes on
 Classification is another type of supervised learning method in which the output is discrete (and finite). Classification is a process of categorising a given set of data into classes. The process starts with predicting the class of given data points. The classes are often referred to as target, label or categories. Below are some of the most common types of classification models.
 
 ### Logistic Regression
-Logistic regression is similar to linear regression but is used to model the probability of a finite number of outcomes, typically two. 
+Logistic regression is similar to linear regression but is used to model the probability of a finite number of outcomes, typically two. There are many reasons why logistic regression is used over linear regression when modelling probabilities of outcomes, which include non-negative values, better results (unbiased), and lower variances. To summarise, a logistic equation is created in such  a way that the outpt values can only be between 0 and 1.
+
+![layers](https://miro.medium.com/max/2400/1*USrdZ1puaFIIymBRcO51mg.png)
+
+The above image shows typical logistic regression, which is clearly between 0 and 1.
+
+### Support Vector Machine
+A support vector machine (SVM) is a supervised classification technique that can get pretty complex. If there are two classes of data, a SVM will find a **hyperplane** or a boundary between the two classes of data that maximised the margin between the two classes (shown in the image below). There are many planes that can separate the two classes,  but only one plane can maximise the margin/distance between the classes.
+
+![layers](https://i.imgur.com/wmvRVjN.png)
+
+[This article](https://medium.com/machine-learning-101/chapter-2-svm-support-vector-machine-theory-f0812effc72) written by Savan Patel goes into detail on the theory behind SVMs and how complicated they can be (and he definitely explains it better!) and it's a great read.
+
+### Naive Bayes
+Naive Bayes is another really popular classifier used in machine learning. The idea behind it is devien by Bayes Theorem, which any mathematician or statistician must be familiar with. The theorem is:
+
+![layers](https://i.imgur.com/r3HhNZF.png)
+
+This essentially translates to "what is the probability of event y occuring given event X?", where y is the output variable. For Naive Bayes, an assumption that variables are independent given the class is made, so it becomes (denominator removed):
+
+![layers](https://i.imgur.com/eKqUaDN.png)
+
+So, P(y|X) is proportional to the right-hand side:
+
+!layers[https://i.imgur.com/H0Ef0sP.png]
+
+Therefore, the goal is to find the class y with the maximum proportional probability.
+
+# Unsupervised Learning
+Unlike supervised learning, unsupervised learning is used to draw inferences and find patterns from input data wihtout references to labelled outcomes. Two main methods used in unsupervised learning include clustering and dimensionality reduction. 
+
+## Clustering
+Clustering involves the grouping or **clustering** of data points. The aim is to segregate groups with similar traits for tasks such as customer segmentation, fraud detection, etc.. Common clustering techniques include the following:
+
+### K-Means 
+K-means finds groups in data, with the number of groups represented by the variable "K". The algorithm works iteratively to assign each data point to one of K groups based on the features that are provided. Data points are clusetered based on feature similarity. The results of K-means clustering algorithm are: 
+  1. Centroids of the K-clusters, which can be used to label new data
+  2. Labels for training data (each dta point is assigned to a single cluster).
+Clustering allows for analysis of groups that have formed organically, rather than defining groups before looking at the data. Each centroid of a cluster is a collection of feature values which define the resulting groups. Examining the centroid feature weights can be used to qualitatively interpret what kind of group each cluster represents.
+
+![layers](https://miro.medium.com/max/1050/1*tWaaZX75oumVwBMcKN-eHA.png)
+
+The image above shows how K-means finds clusters in data.
+
+### Heirarchical Clustering
+Heirarchical clusering is an algorithm similar to the K-means, but outputs structure that is more informative than the unstructured set of flat clusters returned in the form of a heirarchy. Thus, it is easier to decide on the number of cluseters by looking at the dendrogram. The image shown below represents a dendrogram that shows the clustering of letters A-F.
+
+![layers](https://46gyn61z4i0t1u1pnq2bbk2e-wpengine.netdna-ssl.com/wp-content/uploads/2018/03/What-is-a-Dendrogram.png)
+
+### Density-Based Clustering
+Density-based clustering is a clustering method that identifies distinctive groups/clusters in the data by detecting areas where points are concentrated (high density) and where they are separated by areas that are empty (low density).
+
+![layers](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-statistics/GUID-A06A412D-2F4F-4D35-8FFF-1F4B3B3A8F16-web.png)
