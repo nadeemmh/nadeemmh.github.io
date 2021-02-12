@@ -10,7 +10,7 @@ tags:
 
 This post explores different types of machine learning models used for different types of cases and the majority of common machine learning models used in practice. 
 
-The [Machine Learning Explained: Introduction](https://hxmza.me/research/machine-learning-explained/) post explains the two main types of machine learning. All machine learning models are categorised as either supervised or unsupervised. 
+The [Machine Learning Explained: Introduction](https://hxmza.me/research/machine-learning-explained/){:target="_blank"} post explains the two main types of machine learning. All machine learning models are categorised as either supervised or unsupervised. 
 
 ## Supervised Learning Models
 Supervised learning involves learning a function that maps an input to an output based on example input-output pairs. For example, if a dataset had two variables, age (input) and height (output), a supervised learning model could be implemented to predict the height of a person based on their age. An intelligent correlation analysis can lead to a greater understanding of the data. It is useful to use correlation alongside regression as it can more easily present the relationship between two varibles. 
@@ -43,7 +43,7 @@ In the example abode, if a single decision tree was created (third one), it woul
 
 #### Neural Network
 
-A neural network is essentially a network of mathematical equations. It takes one or more input variables and results in one or more output variables by going thorugh the entire network of equations. [This post](https://hxmza.me/research/deep_learning/) explains neural networks used in deep learning and how they are structured. 
+A neural network is essentially a network of mathematical equations. It takes one or more input variables and results in one or more output variables by going thorugh the entire network of equations. [This post](https://hxmza.me/research/deep_learning/){:target="_blank"} explains neural networks used in deep learning and how they are structured. 
 
 ### Classification
 Classification is another type of supervised learning method in which the output is discrete (and finite). Classification is a process of categorising a given set of data into classes. The process starts with predicting the class of given data points. The classes are often referred to as target, label or categories. Below are some of the most common types of classification models.
