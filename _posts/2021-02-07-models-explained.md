@@ -73,7 +73,7 @@ This essentially translates to "what is the probability of event y occuring give
 
 So, P(y|X) is proportional to the right-hand side:
 
-!layers[https://i.imgur.com/H0Ef0sP.png]
+![layers](https://i.imgur.com/H0Ef0sP.png)
 
 Therefore, the goal is to find the class y with the maximum proportional probability.
 
