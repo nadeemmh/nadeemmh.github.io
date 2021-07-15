@@ -50,9 +50,9 @@ $ git <command> —help
 **Set config values:** 
 
 ```r
-$ git config [user.name](http://use.name) "First Last"
+$ git config user.name "First Last"
 
-$ git config [user.email](http://user.email) "emailaddress@email.com"
+$ git config use.email "emailaddress@email.com"
 
 $ git config —list
 ``` 
