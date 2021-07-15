@@ -103,5 +103,41 @@ To ignore files from being added onto the repository and being viewed by others,
 2. Open this newly created file in a text editor and add the files that are not needed.
 3. Now rerun the status command and observe that the ignored files are no longer visible in the list of untracked files and have now been replaced by the .gitignore file. This now needs to be committed in order for the changes to be made.
 
+> ![layers](https://www.google.com/url?sa=i&url=https%3A%2F%2Fgit-scm.com%2Fbook%2Fen%2Fv2%2FGetting-Started-What-is-Git%253F&psig=AOvVaw1EXsNVkHnOMgefDhN5xxac&ust=1626446611899000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCLiRtfen5fECFQAAAAAdAAAAABAJ)
+
+**Understanding the committing process:**
+
+With git there are three states that need to be considered: 
+
+1. Working Directory - untracked and modified files.
+2. Staging Area - where we organise what we want to commit to the repo. The reason for the staging area is so that we can choose exactly what to commit. This is especially useful if there has been lots of work done in multiple files, then individual files can be staged and committed in chunks. This allows for more detailed commits (with the messages). 
+3. Committed files - tracked and unmodified files.
+
+**Adding files to the staging area:**
+
+```r
+$ git add -A (adds all untracked files)
+
+$ git add .file (adds specific file)
+
+$ git status (shows updated tracking and which files have been moved to the staging area. Important step!)
+```
+
+**Removing files from the staging area:**
+
+```r
+$ git reset .file (removed specific files from staging area)
+
+$ git status 
+```
+
+**Committing selected files:** 
+
+```r
+1. $ git add .file
+2. $ git commit -m "message for the commit"
+3. $ git status (should say "nothing to commit, working directory clean")
+4. $ git log (shows the commit that was just made which gives the hash number for commit and some details of the commit)
+```
 
 ### 2. Working with an existing project:
